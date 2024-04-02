@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 public class AddBookRequest {
-    private Long id;
     private String title;
     private String author;
-    private Category category;
+    private String category;
 }
