@@ -7,22 +7,27 @@ import com.example.librarymangementsystem.data.repositories.StaffRepository;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.FindStaffRequest;
+import com.example.librarymangementsystem.dtos.requests.RegisterStaffRequest;
+import com.example.librarymangementsystem.dtos.responses.RegisterStaffResponse;
 import com.example.librarymangementsystem.exceptions.BookAlreadyBorrowedException;
 import com.example.librarymangementsystem.exceptions.BookNotBorrowedException;
+import com.example.librarymangementsystem.exceptions.StaffExistException;
 import com.example.librarymangementsystem.exceptions.StaffNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
+import static com.example.librarymangementsystem.utils.Mapper.map;
 
 @Service
+@AllArgsConstructor
 public class StaffServiceImpl implements StaffService {
-    @Autowired
-    private StaffRepository staffRepository;
-    @Autowired
-    private List<Book> availableBooks;
-    @Autowired
-    private List<BorrowedBook> borrowedBooks;
+    private final StaffRepository staffRepository;
+    private final List<Book> availableBooks;
+    private final List<BorrowedBook> borrowedBooks;
 
 
     @Override
@@ -39,7 +44,7 @@ public class StaffServiceImpl implements StaffService {
     public void removeStaffByUsername(DeleteStaffRequest deleteStaffRequest) {
         FindStaffRequest findStaffRequest = new FindStaffRequest();
         Staff staff = findStaff(findStaffRequest);
-        staffRepository.deleteStaffBy(staff);
+        staffRepository.deleteStaffByUsername(staff);
     }
 
     @Override
@@ -75,12 +80,34 @@ public class StaffServiceImpl implements StaffService {
         }
     }
 
+    @Override
+    public RegisterStaffResponse registerStaff(RegisterStaffRequest registerStaffRequest) {
+        registerStaffRequest.setUsername(registerStaffRequest.getUsername().toLowerCase());
+        validate(registerStaffRequest.getUsername());
+        Staff staff = map(registerStaffRequest);
+        RegisterStaffResponse result = map(staff);
+        staffRepository.save(staff);
+        return result;
+
+
+    }
+
+    private void validate(String username) {
+        Staff staff = staffRepository.findStaffByUsername(username);
+        if(staff != null) throw new StaffExistException("staff exist already");
+
+    }
+
 
     @Override
     public Staff findStaff(FindStaffRequest findStaffRequest) {
         Staff foundStaff = staffRepository.findStaffByUsername(findStaffRequest.getUsername());
         if(foundStaff == null)throw new StaffNotFoundException("staff not found");
         return foundStaff;
+    }
+
+    public void loginStaff(){
+
     }
 
 

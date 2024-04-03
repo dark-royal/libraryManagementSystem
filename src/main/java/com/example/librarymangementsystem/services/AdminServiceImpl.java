@@ -3,15 +3,15 @@ package com.example.librarymangementsystem.services;
 import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class AdminServiceImpl implements AdminServices{
-    @Autowired
-    private BookServices bookServices;
-    @Autowired
-    private StaffService staffService;
+    private final BookServices bookServices;
+    private final StaffService staffService;
 
     @Override
     public void addBooks(AddBookRequest addBookRequest) {

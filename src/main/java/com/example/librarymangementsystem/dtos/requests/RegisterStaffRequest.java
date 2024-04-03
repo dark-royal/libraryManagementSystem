@@ -1,8 +1,10 @@
 package com.example.librarymangementsystem.dtos.requests;
 
 import lombok.Data;
+import org.springframework.stereotype.Component;
 
 @Data
+@Component
 public class RegisterStaffRequest {
     private String username;
     private String password;
