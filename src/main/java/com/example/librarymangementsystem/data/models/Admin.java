@@ -11,9 +11,5 @@ public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
-//    @OneToMany
-//    private List<Book> books;
-//    @OneToMany
-    //    private List<Staff> staffs;
 
 }

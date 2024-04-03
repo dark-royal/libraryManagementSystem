@@ -10,7 +10,6 @@ import lombok.Data;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-
     private Long id;
     private String firstName;
     private String lastName;

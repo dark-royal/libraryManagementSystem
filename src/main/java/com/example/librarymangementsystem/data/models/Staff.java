@@ -12,8 +12,10 @@ public class Staff {
     private String username;
     private String password;
     private String email;
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "admin")
+    @ManyToOne
     private Admin admin;
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "admin_id")
+//    private Admin admin;
 
 }

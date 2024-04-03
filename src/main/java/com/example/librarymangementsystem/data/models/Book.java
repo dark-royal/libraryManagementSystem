@@ -1,14 +1,11 @@
 package com.example.librarymangementsystem.data.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
-public class Book {
+public class Book extends BorrowedBook {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 
@@ -17,4 +14,6 @@ public class Book {
 
     private String author;
     private Category category;
+    @ManyToOne
+    private Admin admin;
 }

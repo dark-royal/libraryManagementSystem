@@ -1,4 +1,4 @@
-package com.example.librarymangementsystem.dtos;
+package com.example.librarymangementsystem.dtos.requests;
 
 import com.example.librarymangementsystem.data.models.Category;
 import lombok.Data;
