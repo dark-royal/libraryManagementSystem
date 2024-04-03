@@ -6,6 +6,7 @@ import com.example.librarymangementsystem.data.models.Staff;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.FindStaffRequest;
+import com.example.librarymangementsystem.dtos.requests.RegisterStaffRequest;
 
 public interface StaffService {
 
@@ -19,6 +20,9 @@ public interface StaffService {
 
     void borrowBookToUser(Staff staff, Book book);
     void returnBookFromUser(Staff staff, Book book);
+
+    void registerStaff(RegisterStaffRequest registerStaffRequest);
+
 
 }
 
