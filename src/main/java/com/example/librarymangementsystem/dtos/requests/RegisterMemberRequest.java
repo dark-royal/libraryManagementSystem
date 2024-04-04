@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-public class RegisterStaffRequest {
+public class RegisterMemberRequest {
     private String username;
     private String password;
     private String firstName;

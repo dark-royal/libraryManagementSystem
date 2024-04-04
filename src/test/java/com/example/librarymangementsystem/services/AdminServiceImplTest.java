@@ -49,29 +49,29 @@ private AdminServices adminServices;
 
     }
 
-    @Test
-    public void addStaff() {
-        AddStaffRequest addStaffRequest = new AddStaffRequest();
-        addStaffRequest.setUsername("praise");
-        addStaffRequest.setEmail("nwangoziri@gmail.com");
-        addStaffRequest.setPassword("myname");
-        adminServices.addStaff(addStaffRequest);
-        assertEquals(1,adminServices.countStaffs());
-
-    }
-
-    @Test
-    void removeStaff() {
-        AddStaffRequest addStaffRequest = new AddStaffRequest();
-        addStaffRequest.setUsername("praise");
-        addStaffRequest.setEmail("nwangoziri@gmail.com");
-        addStaffRequest.setPassword("myname");
-        adminServices.addStaff(addStaffRequest);
-        DeleteStaffRequest deleteStaffRequest = new DeleteStaffRequest();
-        adminServices.removeStaff(deleteStaffRequest);
-        assertEquals(1,adminServices.countStaffs());
-
-    }
+//    @Test
+//    public void addStaff() {
+//        AddStaffRequest addStaffRequest = new AddStaffRequest();
+//        addStaffRequest.setUsername("praise");
+//        addStaffRequest.setEmail("nwangoziri@gmail.com");
+//        addStaffRequest.setPassword("myname");
+//        adminServices.addStaff(addStaffRequest);
+//        assertEquals(1,adminServices.countStaffs());
+//
+//    }
+//
+//    @Test
+//    void removeStaff() {
+//        AddStaffRequest addStaffRequest = new AddStaffRequest();
+//        addStaffRequest.setUsername("praise");
+//        addStaffRequest.setEmail("nwangoziri@gmail.com");
+//        addStaffRequest.setPassword("myname");
+//        adminServices.addStaff(addStaffRequest);
+//        DeleteStaffRequest deleteStaffRequest = new DeleteStaffRequest();
+//        adminServices.removeStaff(deleteStaffRequest);
+//        assertEquals(1,adminServices.countStaffs());
+//
+//    }
 
     @Test
     public void addBook_findBook(){

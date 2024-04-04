@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+
 public class AdminServiceImpl implements AdminServices{
-    private final BookServices bookServices;
-    private final StaffService staffService;
+    @Autowired
+    private  BookServices bookServices;
 
     @Override
     public void addBooks(AddBookRequest addBookRequest) {
@@ -25,22 +25,22 @@ public class AdminServiceImpl implements AdminServices{
 
     }
 
-    @Override
-    public void addStaff(AddStaffRequest addStaffRequest) {
-        staffService.addStaff(addStaffRequest);
-
-    }
-
-    @Override
-    public void removeStaff(DeleteStaffRequest deleteStaffRequest) {
-        staffService.removeStaffByUsername(deleteStaffRequest);
-
-    }
-
-    @Override
-    public Long countStaffs() {
-        return staffService.findAllStaffs();
-    }
+//    @Override
+//    public void addStaff(AddStaffRequest addStaffRequest) {
+//        staffService.addStaff(addStaffRequest);
+//
+//    }
+//
+//    @Override
+//    public void removeStaff(DeleteStaffRequest deleteStaffRequest) {
+//        staffService.removeStaffByUsername(deleteStaffRequest);
+//
+//    }
+//
+//    @Override
+//    public Long countStaffs() {
+//        return staffService.findAllStaffs();
+//    }
 
     @Override
     public Long countBooks() {

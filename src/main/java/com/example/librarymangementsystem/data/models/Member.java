@@ -5,6 +5,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
+
+import java.time.LocalDate;
+
 @Entity
 @Data
 public class Member {
@@ -15,4 +18,11 @@ public class Member {
     private String lastName;
     private String username;
     private String email;
+    private String password;
+    private LocalDate borrowedDate;
+    private LocalDate dueDate;
+    private boolean logStatus = true;
+
+
+
 }
