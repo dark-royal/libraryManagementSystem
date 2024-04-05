@@ -1,15 +1,13 @@
 package com.example.librarymangementsystem.controllers;
 
+import com.example.librarymangementsystem.dtos.requests.FindMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.RegisterMemberRequest;
 import com.example.librarymangementsystem.exceptions.MemberExistException;
 import com.example.librarymangementsystem.exceptions.MemberNotFoundException;
 import com.example.librarymangementsystem.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/member")
@@ -34,5 +32,23 @@ public class MemberController {
             return e.getMessage();
         }
        return "login successful";
+    }
+    @PostMapping("/logout")
+    public String logout(@PathVariable Long id){
+        try{
+            memberService.logout(id);
+        }catch (Exception e){
+            return e.getMessage();
+        }
+        return "logout successful";
+    }
+    @GetMapping("/findMember")
+    public String findMember(@RequestBody FindMemberRequest findMemberRequest) throws MemberNotFoundException {
+        try{
+            memberService.findMember(findMemberRequest);
+        }catch (MemberNotFoundException e){
+            return e.getMessage();
+        }
+        return STR."\{findMemberRequest.getEmail()}found successful";
     }
 }
