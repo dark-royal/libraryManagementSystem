@@ -12,12 +12,12 @@ public interface AdminServices {
 
     void removeBook(Long id);
 
-//    void addStaff(AddStaffRequest addStaffRequest);
-//
-//    void removeStaff(DeleteStaffRequest deleteStaffRequest);
-//
-//
-//    Long countStaffs();
+    void addStaff(AddStaffRequest addStaffRequest);
+
+    void removeStaff(DeleteStaffRequest deleteStaffRequest);
+
+
+   Long countStaffs();
 
     Long countBooks();
 }
