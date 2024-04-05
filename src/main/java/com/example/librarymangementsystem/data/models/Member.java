@@ -1,12 +1,12 @@
 package com.example.librarymangementsystem.data.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -19,10 +19,12 @@ public class Member {
     private String username;
     private String email;
     private String password;
+    @JsonIgnore
     private LocalDate borrowedDate;
+    @JsonIgnore
     private LocalDate dueDate;
-    private boolean logStatus = true;
-
-
+    private boolean logStatus = false;
+    @OneToMany
+    private List<Book> borrowedBooks;
 
 }

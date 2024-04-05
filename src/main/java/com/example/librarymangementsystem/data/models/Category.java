@@ -6,5 +6,7 @@ public enum Category {
     EDUCATION,
     SPIRITUAL,
     FASHION,
-    PSYCHOLOGY
+    PSYCHOLOGY,
+
+    THRILLING
 }

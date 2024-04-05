@@ -1,2 +1,4 @@
-package com.example.librarymangementsystem.dtos.requests;public class RegisterStaffResponse {
+package com.example.librarymangementsystem.dtos.requests;
+
+public class RegisterStaffResponse {
 }

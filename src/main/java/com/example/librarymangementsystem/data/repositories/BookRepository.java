@@ -10,6 +10,5 @@ import java.util.Optional;
 public interface BookRepository extends JpaRepository<Book,Long> {
     Optional<List<Book>> findBooksByCategory(Category category);
 
-    void deleteBookById(Long id);
-
+    Book findBookByTitleAndAuthor(String title, String author);
 }

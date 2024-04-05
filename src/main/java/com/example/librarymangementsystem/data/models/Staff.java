@@ -10,14 +10,9 @@ public class Staff {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String username;
-    private String firstName;
-    private String lastName;
+    private boolean loginStatus;
     private String password;
     private String email;
     @ManyToOne
     private Admin admin;
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "admin_id")
-//    private Admin admin;
-
 }

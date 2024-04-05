@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class FindStaffRequest {
-    private String username;
+    private String email;
 }

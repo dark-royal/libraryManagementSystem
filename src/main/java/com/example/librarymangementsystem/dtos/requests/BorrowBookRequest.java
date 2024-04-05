@@ -12,8 +12,8 @@ public class BorrowBookRequest {
     private String author;
     private String isbn;
     private LocalDate dateBorrowed;
-    private List<Book> books;
     private LocalDate dueDate;
+    private String staffName;
 
 
 }

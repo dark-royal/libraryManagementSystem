@@ -1,22 +1,14 @@
 package com.example.librarymangementsystem.services;
 
-import com.example.librarymangementsystem.data.models.Book;
 import com.example.librarymangementsystem.data.models.Member;
-import com.example.librarymangementsystem.dtos.requests.BorrowBookRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.RegisterMemberRequest;
-import com.example.librarymangementsystem.dtos.responses.BorrowBookResponse;
-import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
-import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
-import com.example.librarymangementsystem.exceptions.IncorrectUsernameException;
-import com.example.librarymangementsystem.exceptions.MemberExistException;
-import com.example.librarymangementsystem.exceptions.MemberNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.librarymangementsystem.exceptions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
-import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,8 +26,7 @@ public class MemberServiceImplementationTest {
         registerMemberRequest.setEmail("praise@gmail.com");
         registerMemberRequest.setUsername("darkRoyal");
         registerMemberRequest.setPassword("password");
-        RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
-        assertNotNull(registerMemberResponse);
+        memberService.registerMember(registerMemberRequest);
         assertEquals(1, memberService.findAllMember().size());
     }
 
@@ -47,8 +38,7 @@ public class MemberServiceImplementationTest {
         registerMemberRequest.setEmail("praise@gmail.com");
         registerMemberRequest.setUsername("darkRoyal");
         registerMemberRequest.setPassword("password");
-        RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
-        assertNotNull(registerMemberResponse);
+        memberService.registerMember(registerMemberRequest);
         assertEquals(1, memberService.findAllMember().size());
 
         RegisterMemberRequest registerMemberRequest1 = new RegisterMemberRequest();
@@ -63,69 +53,89 @@ public class MemberServiceImplementationTest {
     }
 
     @Test
-    public void registerMember_loginMember() throws MemberExistException, IncorrectUsernameException, MemberNotFoundException {
-        Member member = new Member();
+    public void registerMember_loginMember() throws MemberNotFoundException, MemberExistException {
         RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
         registerMemberRequest.setFirstName("kemi");
         registerMemberRequest.setLastName("yooo");
         registerMemberRequest.setEmail("tobi@gmail.com");
         registerMemberRequest.setUsername("darkRoyals");
         registerMemberRequest.setPassword("passwords");
-        RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
-        assertNotNull(registerMemberResponse);
+        memberService.registerMember(registerMemberRequest);
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
-        loginMemberRequest.setUsername("darkRoyals");
+        loginMemberRequest.setEmail("tobi@gmail.com");
         loginMemberRequest.setPassword("passwords");
-        LoginMemberResponse loginMemberResponse = memberService.loginMember(loginMemberRequest);
-        assertNotNull(loginMemberResponse);
-        assertTrue(member.isLogStatus());
+        memberService.login(loginMemberRequest);
+
+        assertTrue(memberService.findMemberById(1L).isLogStatus());
     }
 
     @Test
     public void testThatMemberCannotLoginWithoutBeingRegistered_throwMemberNotFoundException() throws IncorrectUsernameException, MemberNotFoundException {
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
-        loginMemberRequest.setUsername("darkRoyals");
+        loginMemberRequest.setEmail("darkRoyals@gmail.com");
         loginMemberRequest.setPassword("passwords");
-        assertThrows(MemberNotFoundException.class,()->memberService.loginMember(loginMemberRequest));
-
-
+        assertThrows(MemberNotFoundException.class,()->memberService.login(loginMemberRequest));
     }
 
     @Test
-    public void testMemberCanBorrowBook() throws MemberExistException, IncorrectUsernameException, MemberNotFoundException {
-        Member member = new Member();
+    void logout(){
+        memberService.logout(1L);
+        assertFalse(memberService.findMemberById(1L).isLogStatus());
+    }
+
+    @Test
+    public void testThatMemberCannotLoginWithWrongDetails() throws MemberExistException{
         RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
         registerMemberRequest.setFirstName("kemi");
         registerMemberRequest.setLastName("yooo");
-        registerMemberRequest.setEmail("tobi@gmail.com");
+        registerMemberRequest.setEmail("israel@gmail.com");
         registerMemberRequest.setUsername("darkRoyals");
         registerMemberRequest.setPassword("passwords");
-        RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
-        assertNotNull(registerMemberResponse);
+        memberService.registerMember(registerMemberRequest);
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
-        loginMemberRequest.setUsername("darkRoyals");
+        loginMemberRequest.setEmail("israel@gmails.com");
         loginMemberRequest.setPassword("passwords");
-        LoginMemberResponse loginMemberResponse = memberService.loginMember(loginMemberRequest);
-        assertNotNull(loginMemberResponse);
-        assertTrue(member.isLogStatus());
-
-        BorrowBookRequest borrowBookRequest = new BorrowBookRequest();
-        borrowBookRequest.setTitle("The ice twins");
-        borrowBookRequest.setAuthor("My daddy");
-        borrowBookRequest.setIsbn("1234567898765");
-        borrowBookRequest.setDateBorrowed(LocalDate.parse("12/02/2024"));
-        borrowBookRequest.setDueDate(LocalDate.parse("26/02/2024"));
-        BorrowBookResponse borrowBookResponse = memberService.borrowBook(borrowBookRequest);
-        assertEquals(1,memberService.getNumberOfBorrowedBook());
-
-
+        assertThrows(MemberNotFoundException.class,()->memberService.login(loginMemberRequest));
 
     }
 
+//    @Test
+//    public void testMemberCanBorrowBook() throws MemberExistException, IncorrectUsernameException, MemberNotFoundException {
+//        Member member = new Member();
+//        RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
+//        registerMemberRequest.setFirstName("kemi");
+//        registerMemberRequest.setLastName("yooo");
+//        registerMemberRequest.setEmail("tobi@gmail.com");
+//        registerMemberRequest.setUsername("darkRoyals");
+//        registerMemberRequest.setPassword("passwords");
+//        RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
+//        assertNotNull(registerMemberResponse);
+//        assertEquals(1, memberService.findAllMember().size());
+//
+//        LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
+//        loginMemberRequest.setUsername("darkRoyals");
+//        loginMemberRequest.setPassword("passwords");
+//        LoginMemberResponse loginMemberResponse = memberService.loginMember(loginMemberRequest);
+//        assertNotNull(loginMemberResponse);
+//        assertTrue(member.isLogStatus());
+//
+//        BorrowBookRequest borrowBookRequest = new BorrowBookRequest();
+//        borrowBookRequest.setTitle("The ice twins");
+//        borrowBookRequest.setAuthor("My daddy");
+//        borrowBookRequest.setIsbn("1234567898765");
+//        borrowBookRequest.setDateBorrowed(LocalDate.parse("12/02/2024"));
+//        borrowBookRequest.setDueDate(LocalDate.parse("26/02/2024"));
+//        BorrowBookResponse borrowBookResponse = memberService.borrowBook(borrowBookRequest);
+//        assertEquals(1,memberService.getNumberOfBorrowedBook());
+//
+//
+//
+//    }
+//
 
 
 

@@ -26,27 +26,27 @@ public class BookServiceImpl implements BookServices{
 
     @Override
     public void deleteBookById(Long id) {
-        bookRepository.deleteBookById(id);
+        bookRepository.deleteById(id);
+    }
+
+    @Override
+    public Book findBook(String title, String author) {
+        return bookRepository.findBookByTitleAndAuthor(title,author);
     }
 
     public Category verifyCategory(String cat){
         List<Category> categories = Arrays.asList(Category.values());
         if (!categories.contains(Category.valueOf(cat))) {
-            throw new InvalidCategoryException("Invalid category: " + cat);
+            throw new InvalidCategoryException(STR."Invalid category: \{cat}");
         }
         return Category.valueOf(cat);
 
     }
 
-    @Override
-    public void removeBook(Long id) {
-        bookRepository.deleteById(id);
-
-    }
 
     @Override
-    public Long countAllBooks() {
-        return (long) bookRepository.findAll().size();
+    public List<Book> findAllBook() {
+        return bookRepository.findAll();
     }
 
 

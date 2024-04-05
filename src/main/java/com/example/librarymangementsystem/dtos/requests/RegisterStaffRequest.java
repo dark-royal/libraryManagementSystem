@@ -1,2 +1,10 @@
-package com.example.librarymangementsystem.dtos.requests;public class RegisterStaffRequest {
+package com.example.librarymangementsystem.dtos.requests;
+
+import lombok.Data;
+
+@Data
+public class RegisterStaffRequest {
+    private String username;
+    private String password;
+    private String email;
 }
