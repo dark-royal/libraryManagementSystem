@@ -27,6 +27,10 @@ void loginStaff(LoginStaffRequest loginStaffRequest);
     void removeStaffByEmail(DeleteStaffRequest deleteStaffRequest);
 
 
+    void addStaff(AddStaffRequest addStaffRequest);
+
+    void removeStaffByUsername(DeleteStaffRequest deleteStaffRequest);
+
 }
 
 

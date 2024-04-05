@@ -45,6 +45,24 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
+    public void addStaff(AddStaffRequest addStaffRequest) {
+        Staff staff = new Staff();
+        staff.setUsername(addStaffRequest.getUsername());
+        staff.setPassword(addStaffRequest.getPassword());
+        staff.setEmail(addStaffRequest.getEmail());
+        staffRepository.save(staff);
+    }
+
+
+
+    @Override
+    public void removeStaffByUsername(DeleteStaffRequest deleteStaffRequest) {
+        Staff staff = staffRepository.findStaffByEmailAndUsername(deleteStaffRequest.getEmail(),deleteStaffRequest.getUsername());
+        staffRepository.delete(staff);
+
+    }
+
+    @Override
     public List<Staff> findAllStaffs() {
         return  staffRepository.findAll();
     }

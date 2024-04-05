@@ -1,9 +1,13 @@
 package com.example.librarymangementsystem.services;
 
+import com.example.librarymangementsystem.data.models.Book;
+import com.example.librarymangementsystem.data.models.Staff;
 import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface AdminServices {
@@ -17,7 +21,8 @@ public interface AdminServices {
     void removeStaff(DeleteStaffRequest deleteStaffRequest);
 
 
-   Long countStaffs();
+   List<Staff> findAllStaffs();
 
-    Long countBooks();
+
+    List<Book> findAllBooks();
 }
