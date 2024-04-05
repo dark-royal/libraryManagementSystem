@@ -13,6 +13,7 @@ import com.example.librarymangementsystem.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    private List<Book> books;
 
     @Override
     public List<Member> findAllMember() {
@@ -63,14 +66,33 @@ public void validate(String email) throws MemberExistException {
     }
 
     @Override
+
     public int getNumberOfBorrowedBook() {
         return 0;
     }
 
     @Override
-    public BorrowBookResponse borrowBook(BorrowBookRequest borrowBookRequest) {
+    public void borrowBook(BorrowBookRequest borrowBookRequest) {
+        for (Book book : books) {
+            if (book.getTitle().equals(borrowBookRequest.getTitle()) &&
+                    book.getAuthor().equals(borrowBookRequest.getAuthor()) &&
+                    book.isAvailable()) {
+                if (isMemberisPresent(borrowBookRequest.getMemberId().getId())) {
+                    book.setBorrowedDate(LocalDate.now());
+                    book.setDueDate(borrowBookRequest.getDueDate());
+                    book.setAvailable(false);
+                }
+//                else{
+//                    throw new
+//                    }
 
-     return null;
+
+
+
+
+            }
+
+        }
     }
 
     @Override
@@ -96,9 +118,7 @@ public void validate(String email) throws MemberExistException {
         }else {
             throw new RuntimeException("Kosi");
         }
-//        Member member1 = member.get();
-//        member1.setLogStatus(false);
-//        memberRepository.save(member1);
+
 
     }
 
@@ -106,5 +126,12 @@ public void validate(String email) throws MemberExistException {
     public Member findMemberById(Long id ) {
       return  memberRepository.findById(id).get();
     }
-}
+
+
+    private boolean isMemberisPresent(Long memberId) {
+        Optional<Member> member = memberRepository.findById(memberId);
+        return member.isPresent();
+    }
+
+    }
 

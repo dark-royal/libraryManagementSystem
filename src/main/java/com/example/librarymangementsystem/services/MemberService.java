@@ -26,7 +26,7 @@ public interface MemberService {
 
     int getNumberOfBorrowedBook();
 
-    BorrowBookResponse borrowBook(BorrowBookRequest borrowBookRequest);
+    void borrowBook(BorrowBookRequest borrowBookRequest);
 
     void login(LoginMemberRequest loginMemberRequest) throws MemberNotFoundException;
 

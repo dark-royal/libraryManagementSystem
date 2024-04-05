@@ -1,6 +1,7 @@
 package com.example.librarymangementsystem.dtos.requests;
 
 import com.example.librarymangementsystem.data.models.Book;
+import com.example.librarymangementsystem.data.models.Member;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -12,8 +13,9 @@ public class BorrowBookRequest {
     private String author;
     private String isbn;
     private LocalDate dateBorrowed;
+    private Member memberId;
     private LocalDate dueDate;
-    private String staffName;
+    private String MemberName;
 
 
 }

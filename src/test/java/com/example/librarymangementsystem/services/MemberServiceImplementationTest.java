@@ -103,6 +103,26 @@ public class MemberServiceImplementationTest {
 
     }
 
+    @Test
+    public void findAllMember() throws MemberExistException, MemberNotFoundException {
+        RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
+        registerMemberRequest.setFirstName("kemi");
+        registerMemberRequest.setLastName("yooo");
+        registerMemberRequest.setEmail("tobi@gmail.com");
+        registerMemberRequest.setUsername("darkRoyals");
+        registerMemberRequest.setPassword("passwords");
+        memberService.registerMember(registerMemberRequest);
+        assertEquals(1, memberService.findAllMember().size());
+
+        LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
+        loginMemberRequest.setEmail("tobi@gmail.com");
+        loginMemberRequest.setPassword("passwords");
+        memberService.login(loginMemberRequest);
+
+        assertTrue(memberService.findMemberById(1L).isLogStatus());
+        assertEquals(1,memberService.findAll().size());
+    }
+
 //    @Test
 //    public void testMemberCanBorrowBook() throws MemberExistException, IncorrectUsernameException, MemberNotFoundException {
 //        Member member = new Member();
