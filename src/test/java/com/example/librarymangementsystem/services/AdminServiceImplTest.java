@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class AdminServiceImplTest {
@@ -102,7 +101,7 @@ private AdminServices adminServices;
     }
 
     @Test
-    public void register_login() throws MemberExistException, AdminExistException {
+    public void register_login() throws MemberExistException, AdminExistException, AdminNotFoundException {
         RegisterAdminRequest registerAdminRequest = new RegisterAdminRequest();
         registerAdminRequest.setFirstName("myname");
         registerAdminRequest.setLastName("yourname");
@@ -116,7 +115,8 @@ private AdminServices adminServices;
         loginAdminRequest.setEmail("yoo@gmail.com");
         loginAdminRequest.setPassword("praise");
         adminServices.login(loginAdminRequest);
-        assertEquals(adminServices.findAdminById(admin.getId()).isLoginStatus());
+        assertTrue(admin.isLoginStatus());
+
     }
 
 }

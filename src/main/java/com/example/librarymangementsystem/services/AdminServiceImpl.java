@@ -8,10 +8,7 @@ import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginAdminRequest;
-import com.example.librarymangementsystem.exceptions.AdminExistException;
-import com.example.librarymangementsystem.exceptions.BookNotFoundException;
-import com.example.librarymangementsystem.exceptions.RegisterAdminRequest;
-import com.example.librarymangementsystem.exceptions.StaffNotFoundException;
+import com.example.librarymangementsystem.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,8 +75,16 @@ public class AdminServiceImpl implements AdminServices{
 
     }
         @Override
-    public void login(LoginAdminRequest loginAdminRequest) {
-
+    public void login(LoginAdminRequest loginAdminRequest) throws AdminNotFoundException {
+            Optional<Admin> admin = adminRepository.findAdminByEmail(loginAdminRequest.getEmail());
+            if(admin.isPresent()){
+                Admin admin1 = admin.get();
+                admin1.setLoginStatus(true);
+                adminRepository.save(admin1);
+            }
+            else {
+                throw new AdminNotFoundException(STR."\{loginAdminRequest.getEmail()}not found");
+            }
 
     }
 

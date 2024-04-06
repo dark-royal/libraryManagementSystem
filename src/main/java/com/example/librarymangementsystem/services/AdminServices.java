@@ -7,10 +7,7 @@ import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginAdminRequest;
-import com.example.librarymangementsystem.exceptions.AdminExistException;
-import com.example.librarymangementsystem.exceptions.BookNotFoundException;
-import com.example.librarymangementsystem.exceptions.MemberExistException;
-import com.example.librarymangementsystem.exceptions.RegisterAdminRequest;
+import com.example.librarymangementsystem.exceptions.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +27,7 @@ public interface AdminServices {
    List<Staff> findAllStaffs();
 
    Admin registerAdmin(RegisterAdminRequest registerAdminRequest) throws MemberExistException, AdminExistException;
-   void login(LoginAdminRequest loginAdminRequest);
+   void login(LoginAdminRequest loginAdminRequest) throws AdminNotFoundException;
 
 
     List<Book> findAllBooks();

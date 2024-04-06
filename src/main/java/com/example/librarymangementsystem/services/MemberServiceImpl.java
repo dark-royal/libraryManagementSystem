@@ -81,9 +81,9 @@ public void validate(String email) throws MemberExistException {
                     book.setDueDate(borrowBookRequest.getDueDate());
                     book.setAvailable(false);
                 }
-//                else{
-//                    throw new
-//                    }
+                else{
+                    throw new
+                    }
 
 
 
