@@ -7,6 +7,10 @@ import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginAdminRequest;
+import com.example.librarymangementsystem.dtos.responses.AddBookResponse;
+import com.example.librarymangementsystem.dtos.responses.AddStaffResponse;
+import com.example.librarymangementsystem.dtos.responses.RemoveBookResponse;
+import com.example.librarymangementsystem.dtos.responses.RemoveStaffResponse;
 import com.example.librarymangementsystem.exceptions.*;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +21,11 @@ public interface AdminServices {
 
     Book addBooks(AddBookRequest addBookRequest);
 
-    void removeBook(Long id);
+    RemoveBookResponse removeBook(Long id);
 
-    void addStaff(AddStaffRequest addStaffRequest);
+    AddStaffResponse addStaff(AddStaffRequest addStaffRequest);
 
-    void removeStaff(DeleteStaffRequest deleteStaffRequest);
+    RemoveStaffResponse removeStaff(DeleteStaffRequest deleteStaffRequest);
 
 
    List<Staff> findAllStaffs();

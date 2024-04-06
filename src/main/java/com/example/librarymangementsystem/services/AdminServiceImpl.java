@@ -8,6 +8,10 @@ import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginAdminRequest;
+import com.example.librarymangementsystem.dtos.responses.AddBookResponse;
+import com.example.librarymangementsystem.dtos.responses.AddStaffResponse;
+import com.example.librarymangementsystem.dtos.responses.RemoveBookResponse;
+import com.example.librarymangementsystem.dtos.responses.RemoveStaffResponse;
 import com.example.librarymangementsystem.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,27 +31,34 @@ public class AdminServiceImpl implements AdminServices{
 
     @Override
     public Book addBooks(AddBookRequest addBookRequest) {
-        bookServices.addBooks(addBookRequest);
-        return null;
+       return bookServices.addBooks(addBookRequest);
+
     }
 
     @Override
-    public void removeBook(Long id) {
+    public RemoveBookResponse removeBook(Long id) {
         Optional<Admin> admin = adminRepository.findBookById(id);
         bookServices.deleteBookById(admin.get().getId());
-
+        RemoveBookResponse removeBookResponse = new RemoveBookResponse();
+        removeBookResponse.setMessage("removed book successfully");
+        return removeBookResponse;
     }
 
     @Override
-    public void addStaff(AddStaffRequest addStaffRequest) {
+    public AddStaffResponse addStaff(AddStaffRequest addStaffRequest) {
         staffService.addStaff(addStaffRequest);
+        AddStaffResponse addStaffResponse = new AddStaffResponse();
+        addStaffResponse.setMessage("Successful");
 
+        return addStaffResponse;
     }
 
     @Override
-    public void removeStaff(DeleteStaffRequest deleteStaffRequest) {
-        staffService.removeStaffByUsername(deleteStaffRequest);
-
+    public RemoveStaffResponse removeStaff(DeleteStaffRequest deleteStaffRequest) {
+        staffService.removeStaffByEmail(deleteStaffRequest);
+        RemoveStaffResponse removeStaffResponse = new RemoveStaffResponse();
+        removeStaffResponse.setMessage("Removed staff succesfully");
+        return removeStaffResponse;
     }
 
     @Override

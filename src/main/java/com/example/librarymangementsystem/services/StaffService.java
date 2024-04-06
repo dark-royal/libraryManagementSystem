@@ -29,7 +29,7 @@ void loginStaff(LoginStaffRequest loginStaffRequest);
 
     void addStaff(AddStaffRequest addStaffRequest);
 
-    void removeStaffByUsername(DeleteStaffRequest deleteStaffRequest);
+    //void removeStaffByUsername(DeleteStaffRequest deleteStaffRequest);
 
     void deleteAll();
 

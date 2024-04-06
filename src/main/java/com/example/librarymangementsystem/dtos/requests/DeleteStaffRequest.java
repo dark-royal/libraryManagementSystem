@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class DeleteStaffRequest {
     private String email;
-private String username;
+
 
 }

@@ -6,11 +6,14 @@ import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginAdminRequest;
+import com.example.librarymangementsystem.dtos.responses.AddBookResponse;
+import com.example.librarymangementsystem.dtos.responses.AddStaffResponse;
 import com.example.librarymangementsystem.exceptions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -30,11 +33,11 @@ private AdminServices adminServices;
     }
 
     @Test
-    public void addBook_WithIncorrectCategoryNameThrowsInvalidCategoryExcepton(){
+    public void addBook_WithIncorrectCategoryNameThrowsInvalidCategoryException(){
         AddBookRequest addBookRequest = new AddBookRequest();
         addBookRequest.setTitle("ada my love");
         addBookRequest.setAuthor("china achebe");
-        addBookRequest.setCategory("wahala");
+        addBookRequest.setCategory("MAHALA");
         assertThrows(InvalidCategoryException.class,()->adminServices.addBooks(addBookRequest));
     }
 
@@ -57,8 +60,9 @@ private AdminServices adminServices;
         addStaffRequest.setUsername("praise");
         addStaffRequest.setEmail("nwangoziri@gmail.com");
         addStaffRequest.setPassword("myname");
-        adminServices.addStaff(addStaffRequest);
+        AddStaffResponse addStaffResponse = adminServices.addStaff(addStaffRequest);
         assertEquals(1,adminServices.findAllStaffs().size());
+        assertThat(addStaffResponse.getMessage()).isNotNull();
 
     }
 

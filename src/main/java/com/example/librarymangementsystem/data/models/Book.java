@@ -14,8 +14,6 @@ public class Book {
     private Long id;
     private String title;
     private String author;
-    private LocalDate borrowedDate;
-    private LocalDate dueDate;
     private boolean available;
     private Category category;
 }

@@ -65,7 +65,7 @@ public class StaffServicesImplementation {
         staffService.loginStaff(loginStaffRequest);
         assertTrue(staffService.findStaffById(staff.getId()).isLoginStatus());
         DeleteStaffRequest deleteStaffRequest = new DeleteStaffRequest();
-
+        deleteStaffRequest.setEmail("praise@gmail.com");
         staffService.removeStaffByEmail(deleteStaffRequest);
         assertEquals(0,staffService.findAllStaffs().size());
 
@@ -114,7 +114,7 @@ public class StaffServicesImplementation {
     }
 
     @Test
-    public void logout_withoutLoginningOrResgistering(){
+    public void logout_withoutLogin_orRegistering(){
        assertThrows(RuntimeException.class,()-> staffService.logout(1L));
 
     }

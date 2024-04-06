@@ -164,8 +164,9 @@ public class MemberServiceImplementationTest {
         memberService.logout(member.getId());
         assertFalse(memberService.findMemberById(member.getId()).isLogStatus());
         FindMemberRequest findMemberRequest = new FindMemberRequest();
+        findMemberRequest.setEmail("tobi@gmail.com");
         Member member1 = memberService.findMember(findMemberRequest);
-        assertEquals(member1,member1.getEmail());
+        assertEquals(member,member1.getEmail());
 
     }
 

@@ -42,7 +42,7 @@ public class StaffServiceImpl implements StaffService {
         Optional<Staff> staff = staffRepository.findStaffByEmail(deleteStaffRequest.getEmail());
         if (staff.isPresent()) {
             Staff staff1 = staff.get();
-            staffRepository.delete(staff1);
+            staffRepository.deleteById(staff1.getId());
         } else {
             throw new StaffNotFoundException(STR."\{deleteStaffRequest.getEmail()} not found");
         }
@@ -59,17 +59,6 @@ public class StaffServiceImpl implements StaffService {
     }
 
 
-
-    @Override
-    public void removeStaffByUsername(DeleteStaffRequest deleteStaffRequest) {
-        Staff staff = staffRepository.findStaffByEmailAndUsername(deleteStaffRequest.getEmail(),deleteStaffRequest.getUsername());
-        if (staff != null) {
-            staffRepository.delete(staff);
-        }else {
-            throw new StaffNotFoundException(STR."\{deleteStaffRequest.getEmail()}not found");
-        }
-
-    }
 
     @Override
     public void deleteAll() {
