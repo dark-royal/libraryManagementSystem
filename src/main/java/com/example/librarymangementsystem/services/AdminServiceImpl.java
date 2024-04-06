@@ -3,13 +3,20 @@ package com.example.librarymangementsystem.services;
 import com.example.librarymangementsystem.data.models.Admin;
 import com.example.librarymangementsystem.data.models.Book;
 import com.example.librarymangementsystem.data.models.Staff;
+import com.example.librarymangementsystem.data.repositories.AdminRepository;
 import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
+import com.example.librarymangementsystem.dtos.requests.LoginAdminRequest;
+import com.example.librarymangementsystem.exceptions.AdminExistException;
+import com.example.librarymangementsystem.exceptions.BookNotFoundException;
+import com.example.librarymangementsystem.exceptions.RegisterAdminRequest;
+import com.example.librarymangementsystem.exceptions.StaffNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 
@@ -17,18 +24,20 @@ public class AdminServiceImpl implements AdminServices{
     @Autowired
     private  BookServices bookServices;
     @Autowired
-    private AdminR
-    @Autowired
     private StaffService staffService;
+    @Autowired
+    private AdminRepository adminRepository;
 
     @Override
-    public void addBooks(AddBookRequest addBookRequest) {
+    public Book addBooks(AddBookRequest addBookRequest) {
         bookServices.addBooks(addBookRequest);
+        return null;
     }
 
     @Override
     public void removeBook(Long id) {
-        bookServices.deleteBookById(id);
+        Optional<Admin> admin = adminRepository.findBookById(id);
+        bookServices.deleteBookById(admin.get().getId());
 
     }
 
@@ -40,7 +49,6 @@ public class AdminServiceImpl implements AdminServices{
 
     @Override
     public void removeStaff(DeleteStaffRequest deleteStaffRequest) {
-        Admin admin = adminRepository
         staffService.removeStaffByUsername(deleteStaffRequest);
 
     }
@@ -51,9 +59,46 @@ public class AdminServiceImpl implements AdminServices{
     }
 
     @Override
+    public Admin registerAdmin(RegisterAdminRequest registerAdminRequest) throws AdminExistException {
+        validate(registerAdminRequest.getEmail());
+        Admin admin = new Admin();
+        admin.setUsername(registerAdminRequest.getUsername());
+        admin.setPassword(registerAdminRequest.getPassword());
+        admin.setFirstName(registerAdminRequest.getFirstName());
+        admin.setLastName(registerAdminRequest.getLastName());
+        admin.setEmail(registerAdminRequest.getEmail());
+        adminRepository.save(admin);
+
+        return admin;
+    }
+
+    public void validate(String email) throws  AdminExistException {
+        Optional<Admin> admin = adminRepository.findAdminByEmail(email);
+        if (admin.isPresent()) throw new AdminExistException("%s exists already", email);
+
+    }
+        @Override
+    public void login(LoginAdminRequest loginAdminRequest) {
+
+
+    }
+
+    @Override
     public List<Book> findAllBooks() {
         return bookServices.findAllBook();
     }
+
+    @Override
+    public Book findBook(Long id) throws BookNotFoundException {
+        return bookServices.findBook(id);
+    }
+
+    @Override
+    public Long findAdmin() {
+        return  adminRepository.count();
+    }
+
+
 
 
 }

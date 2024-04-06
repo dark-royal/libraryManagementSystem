@@ -22,7 +22,7 @@ void loginStaff(LoginStaffRequest loginStaffRequest);
     void borrowBookToUser(Staff staff, Book book);
     void returnBookFromUser(Staff staff, Book book);
 
-    void registerStaff(RegisterStaffRequest registerStaffRequest);
+    Staff registerStaff(RegisterStaffRequest registerStaffRequest);
 
     void removeStaffByEmail(DeleteStaffRequest deleteStaffRequest);
 
@@ -30,6 +30,8 @@ void loginStaff(LoginStaffRequest loginStaffRequest);
     void addStaff(AddStaffRequest addStaffRequest);
 
     void removeStaffByUsername(DeleteStaffRequest deleteStaffRequest);
+
+    void deleteAll();
 
 }
 

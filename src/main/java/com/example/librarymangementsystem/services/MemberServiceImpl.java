@@ -7,7 +7,6 @@ import com.example.librarymangementsystem.dtos.requests.BorrowBookRequest;
 import com.example.librarymangementsystem.dtos.requests.FindMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.RegisterMemberRequest;
-import com.example.librarymangementsystem.dtos.responses.BorrowBookResponse;
 import com.example.librarymangementsystem.dtos.responses.ReturnBookResponse;
 import com.example.librarymangementsystem.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,15 +37,15 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void registerMember(RegisterMemberRequest registerMemberRequest) throws MemberExistException {
-        validate(registerMemberRequest.getUsername());
+    public Member registerMember(RegisterMemberRequest registerMemberRequest) throws MemberExistException {
+        validate(registerMemberRequest.getEmail());
         Member member1 = new Member();
         member1.setUsername(registerMemberRequest.getUsername());
         member1.setPassword(registerMemberRequest.getPassword());
         member1.setFirstName(registerMemberRequest.getFirstName());
         member1.setLastName(registerMemberRequest.getLastName());
         member1.setEmail(registerMemberRequest.getEmail());
-        memberRepository.save(member1);
+        return memberRepository.save(member1);
     }
 public void validate(String email) throws MemberExistException {
     Optional<Member> member = memberRepository.findMemberByEmail(email);
@@ -125,6 +124,11 @@ public void validate(String email) throws MemberExistException {
     @Override
     public Member findMemberById(Long id ) {
       return  memberRepository.findById(id).get();
+    }
+
+    @Override
+    public void deleteAll() {
+        memberRepository.deleteAll();
     }
 
 

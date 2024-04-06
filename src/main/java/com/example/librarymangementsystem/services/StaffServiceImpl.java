@@ -2,7 +2,6 @@ package com.example.librarymangementsystem.services;
 
 import com.example.librarymangementsystem.data.models.Book;
 
-import com.example.librarymangementsystem.data.models.Member;
 import com.example.librarymangementsystem.data.models.Staff;
 import com.example.librarymangementsystem.data.repositories.StaffRepository;
 import com.example.librarymangementsystem.dtos.requests.*;
@@ -26,13 +25,14 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public void registerStaff(RegisterStaffRequest registerStaffRequest) {
+    public Staff registerStaff(RegisterStaffRequest registerStaffRequest) {
         validate(registerStaffRequest.getEmail());
         Staff staff = new Staff();
         staff.setUsername(registerStaffRequest.getUsername());
         staff.setEmail(registerStaffRequest.getEmail());
         staff.setPassword(registerStaffRequest.getPassword());
         staffRepository.save(staff);
+        return staff;
     }
 
 
@@ -40,7 +40,12 @@ public class StaffServiceImpl implements StaffService {
     public void
     removeStaffByEmail(DeleteStaffRequest deleteStaffRequest) {
         Optional<Staff> staff = staffRepository.findStaffByEmail(deleteStaffRequest.getEmail());
-        //staffRepository.delete(staff);
+        if (staff.isPresent()) {
+            Staff staff1 = staff.get();
+            staffRepository.delete(staff1);
+        } else {
+            throw new StaffNotFoundException(STR."\{deleteStaffRequest.getEmail()} not found");
+        }
 
     }
 
@@ -58,8 +63,17 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public void removeStaffByUsername(DeleteStaffRequest deleteStaffRequest) {
         Staff staff = staffRepository.findStaffByEmailAndUsername(deleteStaffRequest.getEmail(),deleteStaffRequest.getUsername());
-        staffRepository.delete(staff);
+        if (staff != null) {
+            staffRepository.delete(staff);
+        }else {
+            throw new StaffNotFoundException(STR."\{deleteStaffRequest.getEmail()}not found");
+        }
 
+    }
+
+    @Override
+    public void deleteAll() {
+        staffRepository.deleteAll();
     }
 
     @Override
@@ -88,13 +102,18 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public Staff findStaff(FindStaffRequest findStaffRequest) {
         Optional<Staff> foundStaff = staffRepository.findStaffByEmail(findStaffRequest.getEmail());
-        if(foundStaff.isEmpty())throw new StaffNotFoundException("%s not found",findStaffRequest.getEmail());
+        if(foundStaff.isEmpty())throw new StaffNotFoundException(STR."\{findStaffRequest.getEmail()}not found");
         return foundStaff.get();
     }
 
     @Override
     public Staff findStaffById(Long id) {
-        return  staffRepository.findStaffById(id).get();
+        Optional<Staff> staff = staffRepository.findStaffById(id);
+        if (staff.isPresent()) {
+            return staff.get();
+        } else {
+            throw new StaffNotFoundException("staff not found");
+        }
     }
 
     @Override
@@ -106,7 +125,7 @@ public class StaffServiceImpl implements StaffService {
             staffRepository.save(staff1);
         }
         else {
-            throw new StaffNotFoundException("%s not found",loginStaffRequest.getEmail());
+            throw new StaffNotFoundException(STR."\{loginStaffRequest.getEmail()}not found");
         }
 
     }

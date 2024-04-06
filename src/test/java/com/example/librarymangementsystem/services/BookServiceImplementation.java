@@ -3,6 +3,7 @@ package com.example.librarymangementsystem.services;
 import com.example.librarymangementsystem.data.models.Book;
 import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.exceptions.BookNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,11 @@ public class BookServiceImplementation {
 
     @Autowired
     private BookServices bookServices;
+
+    @BeforeEach
+    public void setBookServices(){
+        bookServices.deleteAll();
+    }
 
     @Test
     public void addBooks(){
@@ -37,15 +43,15 @@ public class BookServiceImplementation {
         addBookRequest1.setTitle("my love");
         addBookRequest1.setAuthor("china achebe");
         addBookRequest1.setCategory("ROMANCE");
-        bookServices.addBooks(addBookRequest1);
+        Book book = bookServices.addBooks(addBookRequest1);
         assertEquals(2,bookServices.findAllBook().size());
 
-        bookServices.deleteBookById(2L);
+        bookServices.deleteBookById(book.getId());
         assertEquals(1,bookServices.findAllBook().size());
     }
 
     @Test
-    public void findBook(){
+    public void findBook() throws BookNotFoundException {
         AddBookRequest addBookRequest = new AddBookRequest();
         addBookRequest.setTitle("The ice twins");
         addBookRequest.setAuthor("my daddy");
@@ -56,8 +62,8 @@ public class BookServiceImplementation {
         addBookRequest1.setTitle("my love");
         addBookRequest1.setAuthor("china achebe");
         addBookRequest1.setCategory("ROMANCE");
-        bookServices.addBooks(addBookRequest1);
-        Book foundBook = bookServices.findBook("my love","china achebe");
+        Book book = bookServices.addBooks(addBookRequest1);
+        Book foundBook = bookServices.findBook(book.getId());
         assertNotNull(foundBook);
 
     }
