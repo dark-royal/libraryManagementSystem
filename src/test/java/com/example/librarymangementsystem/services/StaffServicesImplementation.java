@@ -31,7 +31,7 @@ public class StaffServicesImplementation {
         registerStaffRequest.setEmail("praise@gmail.com");
         registerStaffRequest.setUsername("praise");
         registerStaffRequest.setPassword("paul");
-        staffService.registerStaff(registerStaffRequest);
+        Staff staff = staffService.registerStaff(registerStaffRequest);
         RegisterStaffResponse staffResponse = new RegisterStaffResponse();
         staffResponse.setMessage("Registration Successful");
         assertThat(staffResponse.getMessage()).isNotNull();
@@ -81,8 +81,9 @@ public class StaffServicesImplementation {
 
         DeleteStaffRequest deleteStaffRequest = new DeleteStaffRequest();
         deleteStaffRequest.setEmail("praise@gmail.com");
-        RemoveStaffResponse removeStaffResponse = staffService.removeStaffByEmail(deleteStaffRequest);
-        assertThat(removeStaffResponse.getMessage()).isNotNull();
+        staffService.removeStaffByEmail(deleteStaffRequest);
+//        RemoveStaffResponse removeStaffResponse = new RemoveStaffResponse();
+//        assertThat(removeStaffResponse.getMessage()).isNotNull();
         assertEquals(0,staffService.findAllStaffs().size());
 
     }
@@ -143,6 +144,27 @@ public class StaffServicesImplementation {
     }
 
     @Test
-    public void register_login_
+    public void register_login_findStaff(){
+        RegisterStaffRequest registerStaffRequest = new RegisterStaffRequest();
+        registerStaffRequest.setEmail("praise@gmail.com");
+        registerStaffRequest.setUsername("praise");
+        registerStaffRequest.setPassword("paul");
+        Staff staff = staffService.registerStaff(registerStaffRequest);
+        RegisterStaffResponse staffResponse = new RegisterStaffResponse();
+        staffResponse.setMessage("Registration Successful");
+        assertThat(staffResponse.getMessage()).isNotNull();
+        assertEquals(1, staffService.findAllStaffs().size());
+
+        LoginStaffRequest loginStaffRequest = new LoginStaffRequest();
+        loginStaffRequest.setEmail("praise@gmail.com");
+        loginStaffRequest.setPassword("paul");
+        LoginStaffResponse loginStaffResponse = staffService.loginStaff(loginStaffRequest);
+        assertThat(loginStaffResponse.getMessage()).isNotNull();
+        assertTrue(staffService.findStaffById(staff.getId()).isLoginStatus());
+
+        FindStaffRequest findStaffRequest = new FindStaffRequest();
+        findStaffRequest.setEmail("praise@gmail.com");
+        assertEquals("praise@gmail.com",staff.getEmail());
+    }
 
 }

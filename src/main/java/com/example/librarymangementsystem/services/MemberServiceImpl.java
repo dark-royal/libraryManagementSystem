@@ -9,6 +9,7 @@ import com.example.librarymangementsystem.dtos.requests.FindMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.RegisterMemberRequest;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
+import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.ReturnBookResponse;
 import com.example.librarymangementsystem.exceptions.BookNotFoundAvailableException;
 import com.example.librarymangementsystem.exceptions.MemberExistException;
@@ -100,7 +101,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void login(LoginMemberRequest loginMemberRequest) throws MemberNotFoundException {
+    public LoginMemberResponse login(LoginMemberRequest loginMemberRequest) throws MemberNotFoundException {
         Optional<Member> member = memberRepository.findMemberByEmail(loginMemberRequest.getEmail());
         if (member.isPresent()) {
             Member member1 = member.get();
@@ -110,6 +111,7 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberNotFoundException(STR."\{loginMemberRequest.getEmail()} not found");
         }
 
+        return null;
     }
 
     @Override
