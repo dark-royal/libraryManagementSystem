@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class Admin {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String password;
     private String firstName;

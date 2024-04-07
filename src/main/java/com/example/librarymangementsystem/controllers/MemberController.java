@@ -5,7 +5,6 @@ import com.example.librarymangementsystem.dtos.requests.LoginMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.RegisterMemberRequest;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
-import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
 import com.example.librarymangementsystem.exceptions.MemberExistException;
 import com.example.librarymangementsystem.exceptions.MemberNotFoundException;
 import com.example.librarymangementsystem.exceptions.MemberNotLoggedInException;
@@ -24,13 +23,21 @@ public class MemberController {
 
     @PostMapping("/signup")
     public String signup(@RequestBody RegisterMemberRequest registerMemberRequest) throws MemberExistException {
-        return null;
+       try{
+           memberService.registerMember(registerMemberRequest);
+           return "registered successfully";
+       }catch (MemberExistException e){
+           return e.getMessage();
+       }
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginMemberRequest loginMemberRequest) {
-       return null;
-    }
+    public ResponseEntity<LoginMemberResponse> login(@RequestBody LoginMemberRequest loginMemberRequest) {
+            return ResponseEntity.status(HttpStatus.OK).body(memberService.login(loginMemberRequest));
+
+
+
+        }
 
     @PostMapping("/logout")
     public String logout(@PathVariable Long id) {
@@ -44,8 +51,10 @@ public class MemberController {
     }
 
     @GetMapping("/findMember")
-    public String findMember(@RequestBody FindMemberRequest findMemberRequest) throws MemberNotFoundException, MemberNotLoggedInException {
-        return null;
+    public ResponseEntity<FindMemberResponse> findMember(@RequestBody FindMemberRequest findMemberRequest) throws MemberNotFoundException, MemberNotLoggedInException {
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.findMember(findMemberRequest));
+
+
     }
 
     @GetMapping("findAll")
@@ -63,5 +72,8 @@ public class MemberController {
         return e.getMessage();
     }
 }
+
+
+
 
 }

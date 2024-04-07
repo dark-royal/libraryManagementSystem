@@ -29,7 +29,7 @@ LoginStaffResponse loginStaff(LoginStaffRequest loginStaffRequest);
     RemoveStaffResponse removeStaffByEmail(DeleteStaffRequest deleteStaffRequest);
 
 
-    void addStaff(AddStaffRequest addStaffRequest);
+    Staff addStaff(AddStaffRequest addStaffRequest);
 
 
     void deleteAll();

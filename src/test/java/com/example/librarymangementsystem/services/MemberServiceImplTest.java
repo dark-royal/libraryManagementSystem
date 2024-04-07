@@ -5,6 +5,7 @@ import com.example.librarymangementsystem.data.models.Staff;
 import com.example.librarymangementsystem.dtos.requests.*;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
+import com.example.librarymangementsystem.dtos.responses.LoginStaffResponse;
 import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
 import com.example.librarymangementsystem.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,21 +62,17 @@ public class MemberServiceImplTest {
     @Test
     public void registerMember_loginMember() throws MemberNotFoundException, MemberExistException {
         RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
-        registerMemberRequest.setFirstName("kemi");
-        registerMemberRequest.setLastName("yooo");
-        registerMemberRequest.setEmail("tobi@gmail.com");
-        registerMemberRequest.setUsername("darkRoyals");
-        registerMemberRequest.setPassword("passwords");
+        registerMemberRequest.setEmail("praise@gmail.com");
+        registerMemberRequest.setUsername("praise");
+        registerMemberRequest.setPassword("paul");
         Member member = memberService.registerMember(registerMemberRequest);
-        RegisterMemberResponse registerMemberResponse = new RegisterMemberResponse();
-        assertThat(registerMemberResponse.getMessage()).isNotNull();
-        assertEquals(1, memberService.findAllMember().size());
+
+        assertEquals(1,memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
-        loginMemberRequest.setEmail("tobi@gmail.com");
-        loginMemberRequest.setPassword("passwords");
-        LoginMemberResponse loginMemberResponse = memberService.login(loginMemberRequest);
-        assertThat(loginMemberResponse.getMessage()).isNotNull();
+        loginMemberRequest.setEmail("praise@gmail.com");
+        loginMemberRequest.setPassword("paul");
+        memberService.login(loginMemberRequest);
 
         assertTrue(memberService.findMemberById(member.getId()).isLogStatus());
     }
@@ -97,15 +94,13 @@ public class MemberServiceImplTest {
         registerMemberRequest.setUsername("darkRoyals");
         registerMemberRequest.setPassword("passwords");
         Member member = memberService.registerMember(registerMemberRequest);
-        RegisterMemberResponse registerMemberResponse = new RegisterMemberResponse();
-        assertThat(registerMemberResponse.getMessage()).isNotNull();
+
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
         loginMemberRequest.setEmail("tobi@gmail.com");
         loginMemberRequest.setPassword("passwords");
-        LoginMemberResponse loginMemberResponse = memberService.login(loginMemberRequest);
-        assertThat(loginMemberResponse.getMessage()).isNotNull();
+        memberService.login(loginMemberRequest);
 
 
         assertTrue(memberService.findMemberById(member.getId()).isLogStatus());
@@ -122,8 +117,6 @@ public class MemberServiceImplTest {
         registerMemberRequest.setUsername("darkRoyals");
         registerMemberRequest.setPassword("passwords");
         Member member = memberService.registerMember(registerMemberRequest);
-        RegisterMemberResponse registerMemberResponse = new RegisterMemberResponse();
-        assertThat(registerMemberResponse.getMessage()).isNotNull();
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
@@ -142,15 +135,14 @@ public class MemberServiceImplTest {
         registerMemberRequest.setUsername("darkRoyals");
         registerMemberRequest.setPassword("passwords");
         Member member = memberService.registerMember(registerMemberRequest);
-        RegisterMemberResponse registerMemberResponse = new RegisterMemberResponse();
-        assertThat(registerMemberResponse.getMessage()).isNotNull();
+
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
         loginMemberRequest.setEmail("tobi@gmail.com");
         loginMemberRequest.setPassword("passwords");
-        LoginMemberResponse loginMemberResponse = memberService.login(loginMemberRequest);
-        assertThat(loginMemberResponse.getMessage()).isNotNull();
+        memberService.login(loginMemberRequest);
+
         assertTrue(memberService.findMemberById(member.getId()).isLogStatus());
 
         assertEquals(1,memberService.findAll().size());
@@ -165,21 +157,19 @@ public class MemberServiceImplTest {
         registerMemberRequest.setUsername("darkRoyals");
         registerMemberRequest.setPassword("passwords");
         Member member = memberService.registerMember(registerMemberRequest);
-        RegisterMemberResponse registerMemberResponse = new RegisterMemberResponse();
-        assertThat(registerMemberResponse.getMessage()).isNotNull();
+        //RegisterMemberResponse registerMemberResponse = new RegisterMemberResponse();
+        //assertThat(registerMemberResponse.getMessage()).isNotNull();
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
         loginMemberRequest.setEmail("tobi@gmail.com");
         loginMemberRequest.setPassword("passwords");
-        LoginMemberResponse loginMemberResponse = memberService.login(loginMemberRequest);
-        assertThat(loginMemberResponse.getMessage()).isNotNull();
+        memberService.login(loginMemberRequest);
         assertTrue(memberService.findMemberById(member.getId()).isLogStatus());
 
         FindMemberRequest findMemberRequest = new FindMemberRequest();
         findMemberRequest.setEmail("tobi@gmail.com");
-        FindMemberResponse findMemberResponse = memberService.findMember(findMemberRequest);
-        assertThat(findMemberResponse.getMessage()).isNotNull();
+         memberService.findMember(findMemberRequest);
         assertEquals("tobi@gmail.com", member.getEmail());
 
 

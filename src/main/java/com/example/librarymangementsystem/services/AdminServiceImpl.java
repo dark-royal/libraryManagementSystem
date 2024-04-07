@@ -8,7 +8,6 @@ import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginAdminRequest;
-import com.example.librarymangementsystem.dtos.responses.*;
 import com.example.librarymangementsystem.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,44 +25,38 @@ public class AdminServiceImpl implements AdminServices{
     @Autowired
     private AdminRepository adminRepository;
 
+
     @Override
     public Admin findAdminById(Long id) {
         return adminRepository.findById(id).get();
     }
 
     @Override
-    public AddBookResponse addBooks(AddBookRequest addBookRequest) throws InvalidCategoryException {
+    public void addBooks(AddBookRequest addBookRequest) throws InvalidCategoryException {
         bookServices.addBooks(addBookRequest);
-        AddBookResponse addBookResponse = new AddBookResponse();
-        addBookResponse.setMessage("book added successfully");
-        return addBookResponse;
+
+
 
     }
 
     @Override
-    public RemoveBookResponse removeBook(Long id) {
-        Optional<Admin> admin = adminRepository.findBookById(id);
-        bookServices.deleteBookById(admin.get().getId());
-        RemoveBookResponse removeBookResponse = new RemoveBookResponse();
-        removeBookResponse.setMessage("removed book successfully");
-        return removeBookResponse;
+    public void removeBook(Long id) throws BookNotFoundException {
+        Book book = bookServices.findBook(id);
+        bookServices.deleteBookById(book.getId());
+
     }
 
     @Override
-    public AddStaffResponse addStaff(AddStaffRequest addStaffRequest) {
-        staffService.addStaff(addStaffRequest);
-        AddStaffResponse addStaffResponse = new AddStaffResponse();
-        addStaffResponse.setMessage("Successful");
+    public Staff addStaff(AddStaffRequest addStaffRequest) {
+       return staffService.addStaff(addStaffRequest);
 
-        return addStaffResponse;
+
     }
 
     @Override
-    public RemoveStaffResponse removeStaff(DeleteStaffRequest deleteStaffRequest) {
+    public void removeStaff(DeleteStaffRequest deleteStaffRequest) {
         staffService.removeStaffByEmail(deleteStaffRequest);
-        RemoveStaffResponse removeStaffResponse = new RemoveStaffResponse();
-        removeStaffResponse.setMessage("Removed staff succesfully");
-        return removeStaffResponse;
+
     }
 
     @Override
@@ -72,7 +65,7 @@ public class AdminServiceImpl implements AdminServices{
     }
 
     @Override
-    public RegisterAdminResponse registerAdmin(RegisterAdminRequest registerAdminRequest) throws AdminExistException {
+    public Admin registerAdmin(RegisterAdminRequest registerAdminRequest) throws AdminExistException {
         validate(registerAdminRequest.getEmail());
         Admin admin = new Admin();
         admin.setUsername(registerAdminRequest.getUsername());
@@ -81,10 +74,9 @@ public class AdminServiceImpl implements AdminServices{
         admin.setLastName(registerAdminRequest.getLastName());
         admin.setEmail(registerAdminRequest.getEmail());
         adminRepository.save(admin);
-        RegisterAdminResponse registerAdminResponse = new RegisterAdminResponse();
-        registerAdminResponse.setMessage("register successfully");
 
-        return registerAdminResponse;
+
+        return admin;
     }
 
     public void validate(String email) throws  AdminExistException {
@@ -93,15 +85,12 @@ public class AdminServiceImpl implements AdminServices{
 
     }
         @Override
-    public LoginAdminResponse login(LoginAdminRequest loginAdminRequest) throws AdminNotFoundException {
+    public void login(LoginAdminRequest loginAdminRequest) throws AdminNotFoundException {
             Optional<Admin> admin = adminRepository.findAdminByEmail(loginAdminRequest.getEmail());
             if(admin.isPresent()){
                 Admin admin1 = admin.get();
                 admin1.setLoginStatus(true);
                 adminRepository.save(admin1);
-                LoginAdminResponse loginAdminResponse = new LoginAdminResponse();
-                loginAdminResponse.setMessage("login successfully");
-                return loginAdminResponse;
             }
             else {
                 throw new AdminNotFoundException(STR."\{loginAdminRequest.getEmail()}not found");
