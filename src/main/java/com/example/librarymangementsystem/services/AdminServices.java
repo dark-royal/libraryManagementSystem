@@ -7,10 +7,7 @@ import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginAdminRequest;
-import com.example.librarymangementsystem.dtos.responses.AddBookResponse;
-import com.example.librarymangementsystem.dtos.responses.AddStaffResponse;
-import com.example.librarymangementsystem.dtos.responses.RemoveBookResponse;
-import com.example.librarymangementsystem.dtos.responses.RemoveStaffResponse;
+import com.example.librarymangementsystem.dtos.responses.*;
 import com.example.librarymangementsystem.exceptions.*;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +16,9 @@ import java.util.List;
 @Service
 public interface AdminServices {
 
-    Book addBooks(AddBookRequest addBookRequest);
+    Admin findAdminById(Long id);
+
+    AddBookResponse addBooks(AddBookRequest addBookRequest) throws InvalidCategoryException;
 
     RemoveBookResponse removeBook(Long id);
 
@@ -30,16 +29,15 @@ public interface AdminServices {
 
    List<Staff> findAllStaffs();
 
-   Admin registerAdmin(RegisterAdminRequest registerAdminRequest) throws MemberExistException, AdminExistException;
-   void login(LoginAdminRequest loginAdminRequest) throws AdminNotFoundException;
+   RegisterAdminResponse registerAdmin(RegisterAdminRequest registerAdminRequest) throws MemberExistException, AdminExistException;
+   LoginAdminResponse login(LoginAdminRequest loginAdminRequest) throws AdminNotFoundException;
 
 
     List<Book> findAllBooks();
 
     Book findBook(Long id) throws BookNotFoundException;
 
-    Long findAdmin();
 
 
-
+    Long countAdmin();
 }

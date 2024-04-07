@@ -5,6 +5,8 @@ import com.example.librarymangementsystem.data.models.Book;
 import com.example.librarymangementsystem.data.models.Staff;
 import com.example.librarymangementsystem.data.repositories.StaffRepository;
 import com.example.librarymangementsystem.dtos.requests.*;
+import com.example.librarymangementsystem.dtos.responses.LoginStaffResponse;
+import com.example.librarymangementsystem.dtos.responses.RemoveStaffResponse;
 import com.example.librarymangementsystem.exceptions.StaffExistException;
 import com.example.librarymangementsystem.exceptions.StaffNotFoundException;
 import lombok.AllArgsConstructor;
@@ -20,7 +22,7 @@ public class StaffServiceImpl implements StaffService {
     private final StaffRepository staffRepository;
     BookServiceImpl bookService;
 
-    List<Book> avaibook(){
+    List<Book> availableBook(){
        return bookService.findAllBook();
     }
 
@@ -32,12 +34,13 @@ public class StaffServiceImpl implements StaffService {
         staff.setEmail(registerStaffRequest.getEmail());
         staff.setPassword(registerStaffRequest.getPassword());
         staffRepository.save(staff);
+
         return staff;
     }
 
 
     @Override
-    public void
+    public RemoveStaffResponse
     removeStaffByEmail(DeleteStaffRequest deleteStaffRequest) {
         Optional<Staff> staff = staffRepository.findStaffByEmail(deleteStaffRequest.getEmail());
         if (staff.isPresent()) {
@@ -47,6 +50,7 @@ public class StaffServiceImpl implements StaffService {
             throw new StaffNotFoundException(STR."\{deleteStaffRequest.getEmail()} not found");
         }
 
+        return null;
     }
 
     @Override
@@ -56,6 +60,7 @@ public class StaffServiceImpl implements StaffService {
         staff.setPassword(addStaffRequest.getPassword());
         staff.setEmail(addStaffRequest.getEmail());
         staffRepository.save(staff);
+
     }
 
 
@@ -89,10 +94,10 @@ public class StaffServiceImpl implements StaffService {
 
 
     @Override
-    public Staff findStaff(FindStaffRequest findStaffRequest) {
+    public void findStaff(FindStaffRequest findStaffRequest) {
         Optional<Staff> foundStaff = staffRepository.findStaffByEmail(findStaffRequest.getEmail());
         if(foundStaff.isEmpty())throw new StaffNotFoundException(STR."\{findStaffRequest.getEmail()}not found");
-        return foundStaff.get();
+        foundStaff.get();
     }
 
     @Override
@@ -106,16 +111,21 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public void loginStaff(LoginStaffRequest loginStaffRequest){
+    public LoginStaffResponse loginStaff(LoginStaffRequest loginStaffRequest){
         Optional<Staff> staff = staffRepository.findStaffByEmail(loginStaffRequest.getEmail());
         if(staff.isPresent()){
             Staff staff1 = staff.get();
             staff1.setLoginStatus(true);
             staffRepository.save(staff1);
+            LoginStaffResponse response = new LoginStaffResponse();
+            response.setMessage("Login successful");
+            return response;
+
         }
         else {
             throw new StaffNotFoundException(STR."\{loginStaffRequest.getEmail()}not found");
         }
+
 
     }
 

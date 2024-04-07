@@ -3,6 +3,8 @@ package com.example.librarymangementsystem.services;
 import com.example.librarymangementsystem.data.models.Book;
 import com.example.librarymangementsystem.data.models.Staff;
 import com.example.librarymangementsystem.dtos.requests.*;
+import com.example.librarymangementsystem.dtos.responses.LoginStaffResponse;
+import com.example.librarymangementsystem.dtos.responses.RemoveStaffResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +13,8 @@ import java.util.List;
 public interface StaffService {
 
 
-void loginStaff(LoginStaffRequest loginStaffRequest);
-    Staff findStaff(FindStaffRequest findStaffRequest);
+LoginStaffResponse loginStaff(LoginStaffRequest loginStaffRequest);
+    void findStaff(FindStaffRequest findStaffRequest);
     Staff findStaffById(Long id);
 
     void logout(Long id);
@@ -24,12 +26,11 @@ void loginStaff(LoginStaffRequest loginStaffRequest);
 
     Staff registerStaff(RegisterStaffRequest registerStaffRequest);
 
-    void removeStaffByEmail(DeleteStaffRequest deleteStaffRequest);
+    RemoveStaffResponse removeStaffByEmail(DeleteStaffRequest deleteStaffRequest);
 
 
     void addStaff(AddStaffRequest addStaffRequest);
 
-    //void removeStaffByUsername(DeleteStaffRequest deleteStaffRequest);
 
     void deleteAll();
 

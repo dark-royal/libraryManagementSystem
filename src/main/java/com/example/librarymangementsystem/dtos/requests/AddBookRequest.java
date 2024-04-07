@@ -7,5 +7,5 @@ import lombok.Data;
 public class AddBookRequest {
     private String title;
     private String author;
-    private String category;
+    private Category category;
 }

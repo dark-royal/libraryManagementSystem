@@ -4,6 +4,8 @@ import com.example.librarymangementsystem.data.models.Member;
 import com.example.librarymangementsystem.dtos.requests.FindMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.RegisterMemberRequest;
+import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
+import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
 import com.example.librarymangementsystem.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class MemberServiceImplementationTest {
+public class MemberServiceImplTest {
 
     @Autowired
     MemberService memberService;
@@ -48,12 +50,6 @@ public class MemberServiceImplementationTest {
         memberService.registerMember(registerMemberRequest);
         assertEquals(1, memberService.findAllMember().size());
 
-//        RegisterMemberRequest registerMemberRequest1 = new RegisterMemberRequest();
-//        registerMemberRequest1.setFirstName("praisi");
-//        registerMemberRequest1.setLastName("aramidi");
-//        registerMemberRequest1.setEmail("praisi@gmail.com");
-//        registerMemberRequest1.setUsername("darkRoyali");
-//        registerMemberRequest1.setPassword("passwords");
         assertThrows(MemberExistException.class,()-> memberService.registerMember(registerMemberRequest));
 
 
@@ -87,7 +83,7 @@ public class MemberServiceImplementationTest {
     }
 
     @Test
-    void logout() throws MemberExistException, MemberNotFoundException {
+    void logout() throws MemberExistException, MemberNotFoundException, MemberNotLoggedInException {
         RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
         registerMemberRequest.setFirstName("kemi");
         registerMemberRequest.setLastName("yooo");
@@ -140,13 +136,13 @@ public class MemberServiceImplementationTest {
         loginMemberRequest.setEmail("tobi@gmail.com");
         loginMemberRequest.setPassword("passwords");
         memberService.login(loginMemberRequest);
-
         assertTrue(memberService.findMemberById(member.getId()).isLogStatus());
+
         assertEquals(1,memberService.findAll().size());
     }
 
     @Test
-    public void register_login_logout_findMember() throws MemberExistException, MemberNotFoundException {
+    public void register_login_logout_findMember() throws MemberExistException, MemberNotFoundException, MemberNotLoggedInException {
         RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
         registerMemberRequest.setFirstName("kemi");
         registerMemberRequest.setLastName("yooo");
@@ -161,12 +157,17 @@ public class MemberServiceImplementationTest {
         loginMemberRequest.setPassword("passwords");
         memberService.login(loginMemberRequest);
         assertTrue(memberService.findMemberById(member.getId()).isLogStatus());
-        memberService.logout(member.getId());
-        assertFalse(memberService.findMemberById(member.getId()).isLogStatus());
+
         FindMemberRequest findMemberRequest = new FindMemberRequest();
         findMemberRequest.setEmail("tobi@gmail.com");
         Member member1 = memberService.findMember(findMemberRequest);
-        assertEquals(member,member1.getEmail());
+        assertEquals("tobi@gmail.com", member.getEmail());
+
+
+
+        memberService.logout(member.getId());
+        assertFalse(memberService.findMemberById(member.getId()).isLogStatus());
+
 
     }
 

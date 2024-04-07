@@ -7,6 +7,5 @@ public enum Category {
     SPIRITUAL,
     FASHION,
     PSYCHOLOGY,
-
     THRILLING
 }

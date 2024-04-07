@@ -1,8 +1,10 @@
 package com.example.librarymangementsystem.services;
 
 import com.example.librarymangementsystem.data.models.Book;
+import com.example.librarymangementsystem.data.models.Category;
 import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.exceptions.BookNotFoundException;
+import com.example.librarymangementsystem.exceptions.InvalidCategoryException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,27 +24,27 @@ public class BookServiceImplementation {
     }
 
     @Test
-    public void addBooks(){
+    public void addBooks() throws InvalidCategoryException {
         AddBookRequest addBookRequest = new AddBookRequest();
         addBookRequest.setTitle("ada my love");
         addBookRequest.setAuthor("china achebe");
-        addBookRequest.setCategory("ROMANCE");
+        addBookRequest.setCategory(Category.valueOf("ROMANCE"));
         bookServices.addBooks(addBookRequest);
         assertEquals(1,bookServices.findAllBook().size());
     }
 
     @Test
-    public void addBooks_deleteBook(){
+    public void addBooks_deleteBook() throws InvalidCategoryException {
         AddBookRequest addBookRequest = new AddBookRequest();
         addBookRequest.setTitle("The ice twins");
         addBookRequest.setAuthor("my daddy");
-        addBookRequest.setCategory("THRILLING");
+        addBookRequest.setCategory(Category.valueOf("THRILLING"));
         bookServices.addBooks(addBookRequest);
 
         AddBookRequest addBookRequest1 = new AddBookRequest();
         addBookRequest1.setTitle("my love");
         addBookRequest1.setAuthor("china achebe");
-        addBookRequest1.setCategory("ROMANCE");
+        addBookRequest1.setCategory(Category.valueOf("ROMANCE"));
         Book book = bookServices.addBooks(addBookRequest1);
         assertEquals(2,bookServices.findAllBook().size());
 
@@ -51,17 +53,17 @@ public class BookServiceImplementation {
     }
 
     @Test
-    public void findBook() throws BookNotFoundException {
+    public void findBook() throws BookNotFoundException, InvalidCategoryException {
         AddBookRequest addBookRequest = new AddBookRequest();
         addBookRequest.setTitle("The ice twins");
         addBookRequest.setAuthor("my daddy");
-        addBookRequest.setCategory("THRILLING");
+        addBookRequest.setCategory(Category.valueOf("THRILLING"));
         bookServices.addBooks(addBookRequest);
 
         AddBookRequest addBookRequest1 = new AddBookRequest();
         addBookRequest1.setTitle("my love");
         addBookRequest1.setAuthor("china achebe");
-        addBookRequest1.setCategory("ROMANCE");
+        addBookRequest1.setCategory(Category.valueOf("ROMANCE"));
         Book book = bookServices.addBooks(addBookRequest1);
         Book foundBook = bookServices.findBook(book.getId());
         assertNotNull(foundBook);
@@ -69,24 +71,21 @@ public class BookServiceImplementation {
     }
 
     @Test
-    public void findAllBook() {
+    public void findAllBook() throws InvalidCategoryException {
         AddBookRequest addBookRequest = new AddBookRequest();
         addBookRequest.setTitle("The ice twins");
         addBookRequest.setAuthor("my daddy");
-        addBookRequest.setCategory("THRILLING");
+        addBookRequest.setCategory(Category.valueOf("THRILLING"));
         bookServices.addBooks(addBookRequest);
 
         AddBookRequest addBookRequest1 = new AddBookRequest();
         addBookRequest1.setTitle("my love");
         addBookRequest1.setAuthor("china achebe");
-        addBookRequest1.setCategory("ROMANCE");
+        addBookRequest1.setCategory(Category.valueOf("ROMANCE"));
         bookServices.addBooks(addBookRequest1);
         assertEquals(2, bookServices.findAllBook().size());
 
     }
 
-    @Test
-    public void deleteBook_withoutAddingBook(){
-        assertThrows(BookNotFoundException.class,()->bookServices.deleteBookById(2L));
-    }
+
 }

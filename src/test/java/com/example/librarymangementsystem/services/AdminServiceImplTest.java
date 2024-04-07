@@ -2,6 +2,7 @@ package com.example.librarymangementsystem.services;
 
 import com.example.librarymangementsystem.data.models.Admin;
 import com.example.librarymangementsystem.data.models.Book;
+import com.example.librarymangementsystem.data.models.Category;
 import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static com.example.librarymangementsystem.data.models.Category.HORROR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,11 +24,11 @@ class AdminServiceImplTest {
 private AdminServices adminServices;
 
     @Test
-    public void addBooks() {
+    public void addBooks() throws InvalidCategoryException {
        AddBookRequest addBookRequest = new AddBookRequest();
        addBookRequest.setTitle("ada my love");
        addBookRequest.setAuthor("china achebe");
-       addBookRequest.setCategory("HORROR");
+       addBookRequest.setCategory(HORROR);
        adminServices.addBooks(addBookRequest);
        assertEquals(1,adminServices.findAllBooks().size());
 
@@ -37,18 +39,18 @@ private AdminServices adminServices;
         AddBookRequest addBookRequest = new AddBookRequest();
         addBookRequest.setTitle("ada my love");
         addBookRequest.setAuthor("china achebe");
-        addBookRequest.setCategory("MAHALA");
+        addBookRequest.setCategory(Category.valueOf("MHALA"));
         assertThrows(InvalidCategoryException.class,()->adminServices.addBooks(addBookRequest));
     }
 
 
     @Test
-   public  void removeBook() {
+   public  void removeBook() throws InvalidCategoryException {
         AddBookRequest addBookRequest = new AddBookRequest();
         addBookRequest.setTitle("ada my love");
         addBookRequest.setAuthor("china achbe");
-        addBookRequest.setCategory("HORROR");
-       Book book =  adminServices.addBooks(addBookRequest);
+        addBookRequest.setCategory(HORROR);
+        Book book =  adminServices.addBooks(addBookRequest);
         adminServices.removeBook(book.getId());
         assertEquals(0,adminServices.findAllBooks().size());
 
@@ -74,20 +76,21 @@ private AdminServices adminServices;
         addStaffRequest.setPassword("myname");
         adminServices.addStaff(addStaffRequest);
         DeleteStaffRequest deleteStaffRequest = new DeleteStaffRequest();
+        deleteStaffRequest.setEmail("nwangoziri@gmail.com");
         adminServices.removeStaff(deleteStaffRequest);
-        assertEquals(1,adminServices.findAllStaffs().size());
+        assertEquals(0, adminServices.findAllStaffs().size());
 
     }
 
     @Test
-    public void addBook_findBook() throws BookNotFoundException {
+    public void addBook_findBook() throws BookNotFoundException, InvalidCategoryException {
         AddBookRequest addBookRequest = new AddBookRequest();
         addBookRequest.setTitle("ada my love");
         addBookRequest.setAuthor("china achebe");
-        addBookRequest.setCategory("HORROR");
+        addBookRequest.setCategory(Category.valueOf("HORROR"));
         Book book = adminServices.addBooks(addBookRequest);
         Book book1 = adminServices.findBook(book.getId());
-        assertEquals(book1,book1.getId());
+        assertEquals(1L,book1.getId());
 
 
     }
@@ -101,7 +104,7 @@ private AdminServices adminServices;
         registerAdminRequest.setUsername("darkroyal");
         registerAdminRequest.setPassword("praise");
         adminServices.registerAdmin(registerAdminRequest);
-        assertEquals(1,adminServices.findAdmin());
+        assertEquals(1,adminServices.countAdmin());
     }
 
     @Test
@@ -113,13 +116,13 @@ private AdminServices adminServices;
         registerAdminRequest.setUsername("darkroyal");
         registerAdminRequest.setPassword("praise");
         Admin admin = adminServices.registerAdmin(registerAdminRequest);
-        assertEquals(1,adminServices.findAdmin());
+        assertEquals(1,adminServices.countAdmin());
 
         LoginAdminRequest loginAdminRequest = new LoginAdminRequest();
         loginAdminRequest.setEmail("yoo@gmail.com");
         loginAdminRequest.setPassword("praise");
         adminServices.login(loginAdminRequest);
-        assertTrue(admin.isLoginStatus());
+        assertTrue(adminServices.findAdminById(admin.getId()).isLoginStatus());
 
     }
 

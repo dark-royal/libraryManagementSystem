@@ -18,7 +18,7 @@ public interface MemberService {
 
     Member registerMember(RegisterMemberRequest registerMemberRequest) throws MemberExistException;
 
-    Member findMember(FindMemberRequest findMemberRequest) throws MemberNotFoundException;
+    Member findMember(FindMemberRequest findMemberRequest) throws MemberNotFoundException, MemberNotLoggedInException;
     List<Member> findAll();
 
     int getNumberOfBorrowedBook();

@@ -18,8 +18,8 @@ public class BookServiceImpl implements BookServices{
 @Autowired
     BookRepository bookRepository;
     @Override
-    public Book addBooks(AddBookRequest addBookRequest) {
-        Category category = verifyCategory(addBookRequest.getCategory());
+    public Book addBooks(AddBookRequest addBookRequest) throws InvalidCategoryException {
+        Category category = verifyCategory(String.valueOf(addBookRequest.getCategory()));
         Book book = new Book();
         book.setCategory(category);
         book.setAuthor(addBookRequest.getAuthor());
@@ -43,7 +43,7 @@ public class BookServiceImpl implements BookServices{
         }
     }
 
-    public Category verifyCategory(String cat){
+    public Category verifyCategory(String cat) throws InvalidCategoryException {
         List<Category> categories = Arrays.asList(Category.values());
         if (!categories.contains(Category.valueOf(cat))) {
             throw new InvalidCategoryException(STR."Invalid category: \{cat}");

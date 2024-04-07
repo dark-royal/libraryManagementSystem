@@ -3,10 +3,16 @@ package com.example.librarymangementsystem.controllers;
 import com.example.librarymangementsystem.dtos.requests.FindMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.RegisterMemberRequest;
+import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
+import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
+import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
 import com.example.librarymangementsystem.exceptions.MemberExistException;
 import com.example.librarymangementsystem.exceptions.MemberNotFoundException;
+import com.example.librarymangementsystem.exceptions.MemberNotLoggedInException;
 import com.example.librarymangementsystem.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,43 +23,29 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping("/signup")
-    public String signUp(@RequestBody RegisterMemberRequest registerMemberRequest) {
-        try {
-            memberService.registerMember(registerMemberRequest);
-        } catch (MemberExistException e) {
-            return e.getMessage();
-        }
-        return "registeration successful";
+    public String signup(@RequestBody RegisterMemberRequest registerMemberRequest) throws MemberExistException {
+        return null;
     }
 
     @PostMapping("/login")
     public String login(@RequestBody LoginMemberRequest loginMemberRequest) {
-        try {
-            memberService.login(loginMemberRequest);
-        } catch (MemberNotFoundException e) {
-            return e.getMessage();
-        }
-        return "login successful";
+       return null;
     }
 
     @PostMapping("/logout")
     public String logout(@PathVariable Long id) {
         try {
             memberService.logout(id);
-        } catch (Exception e) {
+            return "logout successful";
+        } catch (Exception | MemberNotLoggedInException e) {
             return e.getMessage();
         }
-        return "logout successful";
+
     }
 
     @GetMapping("/findMember")
-    public String findMember(@RequestBody FindMemberRequest findMemberRequest) throws MemberNotFoundException {
-        try {
-            memberService.findMember(findMemberRequest);
-        } catch (MemberNotFoundException e) {
-            return e.getMessage();
-        }
-        return STR."\{findMemberRequest.getEmail()}found successful";
+    public String findMember(@RequestBody FindMemberRequest findMemberRequest) throws MemberNotFoundException, MemberNotLoggedInException {
+        return null;
     }
 
     @GetMapping("findAll")
@@ -63,12 +55,13 @@ public class MemberController {
     }
 @GetMapping("/findMemberById")
     public String findMemberById(@PathVariable Long id) {
-        try {
-            memberService.findMemberById(id);
+    try {
+        memberService.findMemberById(id);
+        return "member found successfully";
 
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-        return "found succcesfully";
+    } catch (MemberNotFoundException e) {
+        return e.getMessage();
     }
+}
+
 }
