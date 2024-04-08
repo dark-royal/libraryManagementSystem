@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/staff")
 public class StaffController {
 
     @Autowired
@@ -46,7 +47,7 @@ public class StaffController {
     @GetMapping("/findAllStaff")
     public String findAllStaff(){
         staffService.findAllStaffs();
-        return "found successfully";
+        return "All staff found successfully";
     }
     @GetMapping("/findStaffById")
     public String findStaffById(@PathVariable Long id){

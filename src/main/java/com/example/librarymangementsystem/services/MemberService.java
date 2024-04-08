@@ -7,6 +7,7 @@ import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.ReturnBookResponse;
+import com.example.librarymangementsystem.exceptions.BookNotFoundException;
 import com.example.librarymangementsystem.exceptions.MemberExistException;
 import com.example.librarymangementsystem.exceptions.MemberNotFoundException;
 import com.example.librarymangementsystem.exceptions.MemberNotLoggedInException;
@@ -17,16 +18,17 @@ public interface MemberService {
 
     List<Member> findAllMember();
 
-    ReturnBookResponse returnBookFromUser(Member member, Book book);
+
+
+    ReturnBookResponse returnBookFromUser(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException;
 
     RegisterMemberResponse registerMember(RegisterMemberRequest registerMemberRequest) throws MemberExistException;
 
     FindMemberResponse findMember(FindMemberRequest findMemberRequest) throws MemberNotFoundException, MemberNotLoggedInException;
     List<Member> findAll();
 
-    int getNumberOfBorrowedBook();
 
-    Book borrowBook(BorrowBookRequest borrowBookRequest) throws MemberNotLoggedInException;
+    Book borrowBook(BorrowBookRequest borrowBookRequest) throws MemberNotLoggedInException, BookNotFoundException;
 
     LoginMemberResponse login(LoginMemberRequest loginMemberRequest) throws MemberNotFoundException;
 

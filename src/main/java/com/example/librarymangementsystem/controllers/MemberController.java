@@ -33,14 +33,15 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginMemberResponse> login(@RequestBody LoginMemberRequest loginMemberRequest) {
-            return ResponseEntity.status(HttpStatus.OK).body(memberService.login(loginMemberRequest));
+        LoginMemberResponse response = memberService.login(loginMemberRequest);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
 
 
 
         }
 
-    @PostMapping("/logout")
-    public String logout(@PathVariable Long id) {
+    @PostMapping("/logout/{id}")
+    public String logout(@PathVariable("id") Long id) {
         try {
             memberService.logout(id);
             return "logout successful";
@@ -62,8 +63,8 @@ public class MemberController {
         memberService.findAll();
         return "all member found successfully";
     }
-@GetMapping("/findMemberById")
-    public String findMemberById(@PathVariable Long id) {
+@GetMapping("/findMemberById{id}")
+    public String findMemberById(@PathVariable("id") Long id) {
     try {
         memberService.findMemberById(id);
         return "member found successfully";

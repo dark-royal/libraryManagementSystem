@@ -113,7 +113,10 @@ public class AdminServiceImpl implements AdminServices{
         return  adminRepository.count();
     }
 
-
+    @Override
+    public void deleteAll() {
+        adminRepository.deleteAll();
+    }
 
 
 }

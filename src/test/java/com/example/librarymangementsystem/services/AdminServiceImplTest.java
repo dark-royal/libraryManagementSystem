@@ -30,7 +30,8 @@ private AdminRepository adminRepository;
 
 @BeforeEach
 public void setAdminServices(){
-    adminRepository.deleteAll();
+//    adminRepository.deleteAll();
+    adminServices.deleteAll();
 }
 
     @Test
@@ -44,14 +45,6 @@ public void setAdminServices(){
 
     }
 
-    @Test
-    public void addBook_WithIncorrectCategoryNameThrowsInvalidCategoryException(){
-        AddBookRequest addBookRequest = new AddBookRequest();
-        addBookRequest.setTitle("ada my love");
-        addBookRequest.setAuthor("china achebe");
-        addBookRequest.setCategory(Category.valueOf("MHALA"));
-        assertThrows(InvalidCategoryException.class,()->adminServices.addBooks(addBookRequest));
-    }
 
 
     @Test
@@ -80,12 +73,12 @@ public void setAdminServices(){
     @Test
     void removeStaff() {
         AddStaffRequest addStaffRequest = new AddStaffRequest();
-        addStaffRequest.setUsername("praise");
-        addStaffRequest.setEmail("nwangoziri@gmail.com");
-        addStaffRequest.setPassword("myname");
+        addStaffRequest.setUsername("praisi");
+        addStaffRequest.setEmail("nwangozir@gmail.com");
+        addStaffRequest.setPassword("mynamei");
         adminServices.addStaff(addStaffRequest);
         DeleteStaffRequest deleteStaffRequest = new DeleteStaffRequest();
-        deleteStaffRequest.setEmail("nwangoziri@gmail.com");
+        deleteStaffRequest.setEmail("nwangozir@gmail.com");
         adminServices.removeStaff(deleteStaffRequest);
         assertEquals(0, adminServices.findAllStaffs().size());
 

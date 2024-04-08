@@ -41,4 +41,5 @@ public interface AdminServices {
     Long countAdmin();
 
 
+    void deleteAll();
 }

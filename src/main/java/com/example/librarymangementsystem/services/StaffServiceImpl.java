@@ -51,11 +51,14 @@ public class StaffServiceImpl implements StaffService {
         Optional<Staff> staff = staffRepository.findStaffByEmail(deleteStaffRequest.getEmail());
         if (staff.isPresent()) {
             staffRepository.deleteById(staff.get().getId());
+            RemoveStaffResponse response = new RemoveStaffResponse();
+            response.setMessage("staff removed successfully");
+            return response;
         } else {
             throw new StaffNotFoundException(STR."\{deleteStaffRequest.getEmail()} not found");
         }
 
-        return null;
+
     }
 
     @Override
@@ -84,36 +87,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public BorrowBookResponse borrowBookToUser(BorrowBookRequest borrowBookRequest) {
 
-//        Staff staff = staffRepository.findStaffById(borrowBookRequest.getStaffId());
-//
-//        Book bookToLend = findBookInStaffBooks(Staff, borrowBookRequest.getAuthor(),borrowBookRequest.getTitle(),borrowBookRequest.getCategory());
-//        if(bookToLend == null || !bookToLend.isAvailable()){
-//            throw new BookNotFoundAvailableException("book not available");
-//
-//        }
-//
-//        staff.getBooks().remove(bookToLend);
-//        staffRepository.save(staff);
-//        memberRepository.save(bookToLend);
-//        bookToLend.setAvailable(false);
-//        memberRepository.save(bookToLend);
-//        List<Book> booksToLend = bookRepository.findBookByTitleAndAuthorAndCategory(
-//                borrowBookRequest.getTitle(), borrowBookRequest.getAuthor(), borrowBookRequest.getCategory());
-//
-//        for (Book book : booksToLend) {
-//            if (!book.isAvailable()) {
-//                throw new BookNotFoundAvailableException("Book is not available to lend");
-//            }
-//        }
-//
-//
-//        for (Book book : booksToLend) {
-//            staffRepository.delete
-//            memberRepository.save(book);
-//            book.setAvailable(false);
-//            bookRepository.save(book);
-//        }
-    return null;
+        return null;
     }
 
     @Override

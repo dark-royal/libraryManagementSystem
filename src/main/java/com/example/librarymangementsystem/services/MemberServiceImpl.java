@@ -4,18 +4,12 @@ import com.example.librarymangementsystem.data.models.Book;
 import com.example.librarymangementsystem.data.models.Member;
 import com.example.librarymangementsystem.data.repositories.BookRepository;
 import com.example.librarymangementsystem.data.repositories.MemberRepository;
-import com.example.librarymangementsystem.dtos.requests.BorrowBookRequest;
-import com.example.librarymangementsystem.dtos.requests.FindMemberRequest;
-import com.example.librarymangementsystem.dtos.requests.LoginMemberRequest;
-import com.example.librarymangementsystem.dtos.requests.RegisterMemberRequest;
+import com.example.librarymangementsystem.dtos.requests.*;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.ReturnBookResponse;
-import com.example.librarymangementsystem.exceptions.BookNotFoundAvailableException;
-import com.example.librarymangementsystem.exceptions.MemberExistException;
-import com.example.librarymangementsystem.exceptions.MemberNotFoundException;
-import com.example.librarymangementsystem.exceptions.MemberNotLoggedInException;
+import com.example.librarymangementsystem.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +22,8 @@ public class MemberServiceImpl implements MemberService {
     private MemberRepository memberRepository;
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private BookServices bookServices;
 
     @Override
     public List<Member> findAllMember() {
@@ -35,8 +31,23 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public ReturnBookResponse returnBookFromUser(Member member, Book book) {
-        return null;
+    public ReturnBookResponse returnBookFromUser(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException {
+        validateLoginStatus();
+        Member member = new Member();
+        Book book = bookServices.findBook(returnBookRequest.getBookId());
+        if(book == null) throw new BookNotFoundException("book  not found ooooooh");
+        book.setAvailable(true);
+        bookRepository.save(book);
+
+        List<Book> borrowBookList = member.getBorrowedBooks();
+        borrowBookList.remove(book);
+        bookRepository.save(book);
+
+        ReturnBookResponse response = new ReturnBookResponse();
+        response.setMessage("returned book successfully");
+
+        return response;
+
     }
 
     @Override
@@ -50,7 +61,7 @@ public class MemberServiceImpl implements MemberService {
         member1.setEmail(registerMemberRequest.getEmail());
          memberRepository.save(member1);
          RegisterMemberResponse response = new RegisterMemberResponse();
-         response.setMessage("Member "+ member1.getFirstName()+ " Created sucessfully");
+         response.setMessage(STR."Member \{member1.getFirstName()} Created sucessfully");
          response.setUserID(member1.getId());
         return response;
     }
@@ -63,8 +74,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public FindMemberResponse findMember(FindMemberRequest findMemberRequest) throws MemberNotFoundException, MemberNotLoggedInException {
+        //validateLoginStatus();
         Optional<Member> foundMember = memberRepository.findMemberByEmail(findMemberRequest.getEmail());
-        validateLoginStatus();
         if (foundMember.isEmpty()) throw new MemberNotFoundException("%s not found");
         FindMemberResponse findMemberResponse = new FindMemberResponse();
         findMemberResponse.setMessage(" Member found successful");
@@ -85,29 +96,22 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findAll();
     }
 
-    @Override
-    public int getNumberOfBorrowedBook() {
-        return 0;
-    }
+
 
     @Override
-    public Book borrowBook(BorrowBookRequest borrowBookRequest) throws MemberNotLoggedInException {
+    public Book borrowBook(BorrowBookRequest borrowBookRequest) throws MemberNotLoggedInException, BookNotFoundException {
         validateLoginStatus();
-        List<Book> bookBorrow = bookRepository.findBookByTitleAndAuthorAndCategory(borrowBookRequest.getTitle(), borrowBookRequest.getAuthor(), borrowBookRequest.getCategory());
-        for (Book book : bookBorrow) {
-            if (!book.isAvailable()) {
-                throw new BookNotFoundAvailableException("Book is not available to borrow");
-            }
-        }
+        Member member = new Member();
+        Book book = bookServices.findBook(borrowBookRequest.getBookId());
+        if(!book.isAvailable()) throw new BookNotFoundAvailableException("book is not available");
+        book.setAvailable(false);
+        bookRepository.save(book);
 
-        for (Book book1 : bookBorrow) {
-            book1.setAvailable(false);
-            bookRepository.save(book1);
-        }
-        borrowBookRequest.getBorrowBooks().addAll(bookBorrow);
+        List<Book> borrowBookList = member.getBorrowedBooks();
+        borrowBookList.add(book);
+        bookRepository.delete(book);
 
-
-        return (Book) bookBorrow;
+        return book;
     }
 
     @Override
@@ -117,17 +121,19 @@ public class MemberServiceImpl implements MemberService {
             Member member1 = member.get();
             member1.setLogStatus(true);
             memberRepository.save(member1);
+            LoginMemberResponse response = new LoginMemberResponse();
+            response.setMessage("Login Successful");
+            return response;
         } else {
             throw new MemberNotFoundException(STR."\{loginMemberRequest.getEmail()} not found");
         }
 
-        return null;
     }
 
     @Override
     public void logout(Long id) throws MemberNotLoggedInException {
         Optional<Member> member = memberRepository.findById(id);
-        validateLoginStatus();
+        //validateLoginStatus();
 
         if (member.isPresent()) {
             Member member1 = member.get();

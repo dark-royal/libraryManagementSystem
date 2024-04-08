@@ -21,9 +21,7 @@ public class Member {
     private String username;
     private String email;
     private String password;
-    @JsonIgnore
     private LocalDate borrowedDate;
-    @JsonIgnore
     private LocalDate dueDate;
     private boolean logStatus = false;
     @OneToMany
