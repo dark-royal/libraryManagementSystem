@@ -10,6 +10,7 @@ import com.example.librarymangementsystem.dtos.requests.LoginMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.RegisterMemberRequest;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
+import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.ReturnBookResponse;
 import com.example.librarymangementsystem.exceptions.BookNotFoundAvailableException;
 import com.example.librarymangementsystem.exceptions.MemberExistException;
@@ -39,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member registerMember(RegisterMemberRequest registerMemberRequest) throws MemberExistException {
+    public RegisterMemberResponse registerMember(RegisterMemberRequest registerMemberRequest) throws MemberExistException {
         validate(registerMemberRequest.getEmail());
         Member member1 = new Member();
         member1.setUsername(registerMemberRequest.getUsername());
@@ -48,8 +49,10 @@ public class MemberServiceImpl implements MemberService {
         member1.setLastName(registerMemberRequest.getLastName());
         member1.setEmail(registerMemberRequest.getEmail());
          memberRepository.save(member1);
-
-        return member1;
+         RegisterMemberResponse response = new RegisterMemberResponse();
+         response.setMessage("Member "+ member1.getFirstName()+ " Created sucessfully");
+         response.setUserID(member1.getId());
+        return response;
     }
 
     public void validate(String email) throws MemberExistException {
@@ -60,14 +63,21 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public FindMemberResponse findMember(FindMemberRequest findMemberRequest) throws MemberNotFoundException, MemberNotLoggedInException {
-        validateLoginStatus();
         Optional<Member> foundMember = memberRepository.findMemberByEmail(findMemberRequest.getEmail());
-        if (!foundMember.isPresent()) throw new MemberNotFoundException("%s not found");
-
+        validateLoginStatus();
+        if (foundMember.isEmpty()) throw new MemberNotFoundException("%s not found");
         FindMemberResponse findMemberResponse = new FindMemberResponse();
         findMemberResponse.setMessage(" Member found successful");
+        findMemberResponse.setEmail(foundMember.get().getEmail());
+        findMemberResponse.setUsername(foundMember.get().getUsername());
+        findMemberResponse.setFirstName(foundMember.get().getFirstName());
+        findMemberResponse.setLogStatus(foundMember.get().isLogStatus());
+        findMemberResponse.setLastName(foundMember.get().getLastName());
+        findMemberResponse.setBorrowedBooks(foundMember.get().getBorrowedBooks());
+        findMemberResponse.setDueDate(foundMember.get().getDueDate());
+        findMemberResponse.setBorrowedDate(foundMember.get().getBorrowedDate());
+        findMemberResponse.setId(foundMember.get().getId());
         return findMemberResponse;
-
     }
 
     @Override
@@ -116,8 +126,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void logout(Long id) throws MemberNotLoggedInException {
-        validateLoginStatus();
         Optional<Member> member = memberRepository.findById(id);
+        validateLoginStatus();
 
         if (member.isPresent()) {
             Member member1 = member.get();
@@ -140,7 +150,7 @@ public class MemberServiceImpl implements MemberService {
 
     public void validateLoginStatus() throws MemberNotLoggedInException {
         Member member = new Member();
-        if (member.isLogStatus()) {
+        if (!member.isLogStatus()) {
             throw new MemberNotLoggedInException("pls login in");
 
         }

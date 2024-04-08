@@ -28,5 +28,4 @@ public class Member {
     private boolean logStatus = false;
     @OneToMany
     private List<Book> borrowedBooks;
-
 }

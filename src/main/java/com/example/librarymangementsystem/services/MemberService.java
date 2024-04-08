@@ -5,6 +5,7 @@ import com.example.librarymangementsystem.data.models.Member;
 import com.example.librarymangementsystem.dtos.requests.*;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
+import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.ReturnBookResponse;
 import com.example.librarymangementsystem.exceptions.MemberExistException;
 import com.example.librarymangementsystem.exceptions.MemberNotFoundException;
@@ -18,7 +19,7 @@ public interface MemberService {
 
     ReturnBookResponse returnBookFromUser(Member member, Book book);
 
-    Member registerMember(RegisterMemberRequest registerMemberRequest) throws MemberExistException;
+    RegisterMemberResponse registerMember(RegisterMemberRequest registerMemberRequest) throws MemberExistException;
 
     FindMemberResponse findMember(FindMemberRequest findMemberRequest) throws MemberNotFoundException, MemberNotLoggedInException;
     List<Member> findAll();

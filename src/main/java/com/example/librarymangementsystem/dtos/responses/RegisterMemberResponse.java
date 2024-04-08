@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class RegisterMemberResponse  {
     private String message;
+    private Long userID;
 }

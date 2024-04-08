@@ -3,6 +3,8 @@ package com.example.librarymangementsystem.data.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 public class Staff {
@@ -15,4 +17,7 @@ public class Staff {
     private String email;
     @ManyToOne
     private Admin admin;
+
+
+
 }

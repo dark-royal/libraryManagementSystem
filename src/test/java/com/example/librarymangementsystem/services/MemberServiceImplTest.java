@@ -35,7 +35,7 @@ public class MemberServiceImplTest {
         registerMemberRequest.setEmail("praise@gmail.com");
         registerMemberRequest.setUsername("praise");
         registerMemberRequest.setPassword("paul");
-        Member member = memberService.registerMember(registerMemberRequest);
+        RegisterMemberResponse response = memberService.registerMember(registerMemberRequest);
         RegisterMemberResponse registerMemberResponse = new RegisterMemberResponse();
         registerMemberResponse.setMessage("Registration Successful");
         assertThat(registerMemberResponse.getMessage()).isNotNull();
@@ -48,15 +48,13 @@ public class MemberServiceImplTest {
         registerMemberRequest.setEmail("praise@gmail.com");
         registerMemberRequest.setUsername("praise");
         registerMemberRequest.setPassword("paul");
-        Member member = memberService.registerMember(registerMemberRequest);
+        RegisterMemberResponse response = memberService.registerMember(registerMemberRequest);
         RegisterMemberResponse registerMemberResponse = new RegisterMemberResponse();
         registerMemberResponse.setMessage("Registration Successful");
         assertThat(registerMemberResponse.getMessage()).isNotNull();
         assertEquals(1,memberService.findAllMember().size());
 
         assertThrows(MemberExistException.class,()-> memberService.registerMember(registerMemberRequest));
-
-
     }
 
     @Test
@@ -65,7 +63,9 @@ public class MemberServiceImplTest {
         registerMemberRequest.setEmail("praise@gmail.com");
         registerMemberRequest.setUsername("praise");
         registerMemberRequest.setPassword("paul");
-        Member member = memberService.registerMember(registerMemberRequest);
+        RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
+        registerMemberResponse.setMessage("Registration Successful");
+        assertThat(registerMemberResponse.getMessage()).isNotNull();
 
         assertEquals(1,memberService.findAllMember().size());
 
@@ -74,7 +74,7 @@ public class MemberServiceImplTest {
         loginMemberRequest.setPassword("paul");
         memberService.login(loginMemberRequest);
 
-        assertTrue(memberService.findMemberById(member.getId()).isLogStatus());
+        assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
     }
 
     @Test
@@ -93,7 +93,9 @@ public class MemberServiceImplTest {
         registerMemberRequest.setEmail("tobi@gmail.com");
         registerMemberRequest.setUsername("darkRoyals");
         registerMemberRequest.setPassword("passwords");
-        Member member = memberService.registerMember(registerMemberRequest);
+        RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
+        registerMemberResponse.setMessage("Registration Successful");
+        assertThat(registerMemberResponse.getMessage()).isNotNull();
 
         assertEquals(1, memberService.findAllMember().size());
 
@@ -103,9 +105,9 @@ public class MemberServiceImplTest {
         memberService.login(loginMemberRequest);
 
 
-        assertTrue(memberService.findMemberById(member.getId()).isLogStatus());
-        memberService.logout(member.getId());
-        assertFalse(memberService.findMemberById(member.getId()).isLogStatus());
+        assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
+        memberService.logout(registerMemberResponse.getUserID());
+        assertFalse(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
     }
 
     @Test
@@ -116,14 +118,15 @@ public class MemberServiceImplTest {
         registerMemberRequest.setEmail("israel@gmail.com");
         registerMemberRequest.setUsername("darkRoyals");
         registerMemberRequest.setPassword("passwords");
-        Member member = memberService.registerMember(registerMemberRequest);
+        RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
+        registerMemberResponse.setMessage("Registration Successful");
+        assertThat(registerMemberResponse.getMessage()).isNotNull();
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
         loginMemberRequest.setEmail("israel@gmails.com");
         loginMemberRequest.setPassword("passwords");
         assertThrows(MemberNotFoundException.class,()->memberService.login(loginMemberRequest));
-
     }
 
     @Test
@@ -134,7 +137,9 @@ public class MemberServiceImplTest {
         registerMemberRequest.setEmail("tobi@gmail.com");
         registerMemberRequest.setUsername("darkRoyals");
         registerMemberRequest.setPassword("passwords");
-        Member member = memberService.registerMember(registerMemberRequest);
+        RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
+        registerMemberResponse.setMessage("Registration Successful");
+        assertThat(registerMemberResponse.getMessage()).isNotNull();
 
         assertEquals(1, memberService.findAllMember().size());
 
@@ -143,7 +148,7 @@ public class MemberServiceImplTest {
         loginMemberRequest.setPassword("passwords");
         memberService.login(loginMemberRequest);
 
-        assertTrue(memberService.findMemberById(member.getId()).isLogStatus());
+        assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
 
         assertEquals(1,memberService.findAll().size());
     }
@@ -156,26 +161,25 @@ public class MemberServiceImplTest {
         registerMemberRequest.setEmail("tobi@gmail.com");
         registerMemberRequest.setUsername("darkRoyals");
         registerMemberRequest.setPassword("passwords");
-        Member member = memberService.registerMember(registerMemberRequest);
-        //RegisterMemberResponse registerMemberResponse = new RegisterMemberResponse();
-        //assertThat(registerMemberResponse.getMessage()).isNotNull();
+        RegisterMemberResponse registerMemberResponse  = memberService.registerMember(registerMemberRequest);
+        assertThat(registerMemberResponse.getMessage()).isNotNull();
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
         loginMemberRequest.setEmail("tobi@gmail.com");
         loginMemberRequest.setPassword("passwords");
         memberService.login(loginMemberRequest);
-        assertTrue(memberService.findMemberById(member.getId()).isLogStatus());
+        assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
 
         FindMemberRequest findMemberRequest = new FindMemberRequest();
         findMemberRequest.setEmail("tobi@gmail.com");
-         memberService.findMember(findMemberRequest);
-        assertEquals("tobi@gmail.com", member.getEmail());
+        FindMemberResponse response = memberService.findMember(findMemberRequest);
+        assertEquals("tobi@gmail.com", response.getEmail());
 
 
 
-        memberService.logout(member.getId());
-        assertFalse(memberService.findMemberById(member.getId()).isLogStatus());
+        memberService.logout(response.getId());
+        assertFalse(memberService.findMemberById(response.getId()).isLogStatus());
 
 
     }
