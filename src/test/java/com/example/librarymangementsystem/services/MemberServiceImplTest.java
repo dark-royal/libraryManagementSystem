@@ -1,19 +1,17 @@
 package com.example.librarymangementsystem.services;
 
-import com.example.librarymangementsystem.data.models.Member;
-import com.example.librarymangementsystem.data.models.Staff;
+import com.example.librarymangementsystem.data.models.Category;
 import com.example.librarymangementsystem.dtos.requests.*;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
-import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
-import com.example.librarymangementsystem.dtos.responses.LoginStaffResponse;
 import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
 import com.example.librarymangementsystem.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 
+
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,27 +29,18 @@ public class MemberServiceImplTest {
 
     @Test
     public void testRegisterMember() throws MemberExistException {
-        RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
-        registerMemberRequest.setEmail("praise@gmail.com");
-        registerMemberRequest.setUsername("praise");
-        registerMemberRequest.setPassword("paul");
+       RegisterMemberRequest registerMemberRequest = registerRequests("praise", "oyewole","praise@gmail.com");
+
         RegisterMemberResponse response = memberService.registerMember(registerMemberRequest);
-        RegisterMemberResponse registerMemberResponse = new RegisterMemberResponse();
-        registerMemberResponse.setMessage("Registration Successful");
-        assertThat(registerMemberResponse.getMessage()).isNotNull();
+        assertThat(response.getMessage()).isNotNull();
         assertEquals(1,memberService.findAllMember().size());
     }
 
     @Test
     public void testThatMemberCannotRegisterWithTheSameUsername() throws MemberExistException {
-        RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
-        registerMemberRequest.setEmail("praise@gmail.com");
-        registerMemberRequest.setUsername("praise");
-        registerMemberRequest.setPassword("paul");
+        RegisterMemberRequest registerMemberRequest = registerRequests("yii", "yoo","praise1@gmail.com");
         RegisterMemberResponse response = memberService.registerMember(registerMemberRequest);
-        RegisterMemberResponse registerMemberResponse = new RegisterMemberResponse();
-        registerMemberResponse.setMessage("Registration Successful");
-        assertThat(registerMemberResponse.getMessage()).isNotNull();
+        assertThat(response.getMessage()).isNotNull();
         assertEquals(1,memberService.findAllMember().size());
 
         assertThrows(MemberExistException.class,()-> memberService.registerMember(registerMemberRequest));
@@ -59,19 +48,15 @@ public class MemberServiceImplTest {
 
     @Test
     public void registerMember_loginMember() throws MemberNotFoundException, MemberExistException {
-        RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
-        registerMemberRequest.setEmail("praise@gmail.com");
-        registerMemberRequest.setUsername("praise");
-        registerMemberRequest.setPassword("paul");
+        RegisterMemberRequest registerMemberRequest = registerRequests("ned", "nedo","praise2@gmail.com");
         RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
-        registerMemberResponse.setMessage("Registration Successful");
         assertThat(registerMemberResponse.getMessage()).isNotNull();
 
         assertEquals(1,memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
-        loginMemberRequest.setEmail("praise@gmail.com");
-        loginMemberRequest.setPassword("paul");
+        loginMemberRequest.setEmail("praise2@gmail.com");
+        loginMemberRequest.setPassword(registerMemberRequest.getPassword());
         memberService.login(loginMemberRequest);
 
         assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
@@ -87,65 +72,49 @@ public class MemberServiceImplTest {
 
     @Test
     void logout() throws MemberExistException, MemberNotFoundException, MemberNotLoggedInException {
-        RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
-        registerMemberRequest.setFirstName("kemi");
-        registerMemberRequest.setLastName("yooo");
-        registerMemberRequest.setEmail("tobi@gmail.com");
-        registerMemberRequest.setUsername("darkRoyals");
-        registerMemberRequest.setPassword("passwords");
+        RegisterMemberRequest registerMemberRequest = registerRequests("heritage", "yoo","praise1@gmail.com");
         RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
-        registerMemberResponse.setMessage("Registration Successful");
         assertThat(registerMemberResponse.getMessage()).isNotNull();
-
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
-        loginMemberRequest.setEmail("tobi@gmail.com");
-        loginMemberRequest.setPassword("passwords");
+        loginMemberRequest.setEmail(registerMemberRequest.getEmail());
+        loginMemberRequest.setPassword(registerMemberRequest.getPassword());
         memberService.login(loginMemberRequest);
 
 
         assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
-        memberService.logout(registerMemberResponse.getUserID());
+        LogoutMemberRequest logoutMemberRequest = new LogoutMemberRequest();
+        logoutMemberRequest.setEmail(registerMemberRequest.getEmail());
+        memberService.logout(logoutMemberRequest);
         assertFalse(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
     }
 
     @Test
     public void testThatMemberCannotLoginWithWrongDetails() throws MemberExistException{
-        RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
-        registerMemberRequest.setFirstName("kemi");
-        registerMemberRequest.setLastName("yooo");
-        registerMemberRequest.setEmail("israel@gmail.com");
-        registerMemberRequest.setUsername("darkRoyals");
-        registerMemberRequest.setPassword("passwords");
+        RegisterMemberRequest registerMemberRequest = registerRequests("yinola", "kemi","praise13@gmail.com");
+
         RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
-        registerMemberResponse.setMessage("Registration Successful");
         assertThat(registerMemberResponse.getMessage()).isNotNull();
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
-        loginMemberRequest.setEmail("israel@gmails.com");
-        loginMemberRequest.setPassword("passwords");
+        loginMemberRequest.setEmail("ned");
+        loginMemberRequest.setPassword("name");
         assertThrows(MemberNotFoundException.class,()->memberService.login(loginMemberRequest));
     }
 
     @Test
     public void findAllMember() throws MemberExistException, MemberNotFoundException {
-        RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
-        registerMemberRequest.setFirstName("kemi");
-        registerMemberRequest.setLastName("yooo");
-        registerMemberRequest.setEmail("tobi@gmail.com");
-        registerMemberRequest.setUsername("darkRoyals");
-        registerMemberRequest.setPassword("passwords");
+        RegisterMemberRequest registerMemberRequest = registerRequests("marvel", "mercy","praise14@gmail.com");
         RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
-        registerMemberResponse.setMessage("Registration Successful");
         assertThat(registerMemberResponse.getMessage()).isNotNull();
 
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
-        loginMemberRequest.setEmail("tobi@gmail.com");
-        loginMemberRequest.setPassword("passwords");
+        loginMemberRequest.setEmail(registerMemberRequest.getEmail());
+        loginMemberRequest.setPassword(registerMemberRequest.getPassword());
         memberService.login(loginMemberRequest);
 
         assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
@@ -155,69 +124,62 @@ public class MemberServiceImplTest {
 
     @Test
     public void register_login_logout_findMember() throws MemberExistException, MemberNotFoundException, MemberNotLoggedInException {
-        RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
-        registerMemberRequest.setFirstName("kemi");
-        registerMemberRequest.setLastName("yooo");
-        registerMemberRequest.setEmail("tobi@gmail.com");
-        registerMemberRequest.setUsername("darkRoyals");
-        registerMemberRequest.setPassword("passwords");
+        RegisterMemberRequest registerMemberRequest = registerRequests("precious", "preshy","precious@gmail.com");
         RegisterMemberResponse registerMemberResponse  = memberService.registerMember(registerMemberRequest);
         assertThat(registerMemberResponse.getMessage()).isNotNull();
         assertEquals(1, memberService.findAllMember().size());
 
         LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
-        loginMemberRequest.setEmail("tobi@gmail.com");
-        loginMemberRequest.setPassword("passwords");
+        loginMemberRequest.setEmail(registerMemberRequest.getEmail());
+        loginMemberRequest.setPassword(registerMemberRequest.getPassword());
         memberService.login(loginMemberRequest);
         assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
 
         FindMemberRequest findMemberRequest = new FindMemberRequest();
-        findMemberRequest.setEmail("tobi@gmail.com");
+        findMemberRequest.setEmail(registerMemberRequest.getEmail());
         FindMemberResponse response = memberService.findMember(findMemberRequest);
-        assertEquals("tobi@gmail.com", response.getEmail());
+        assertEquals(registerMemberRequest.getEmail(), response.getMembers().getEmail());
 
-
-
-        memberService.logout(response.getId());
-        assertFalse(memberService.findMemberById(response.getId()).isLogStatus());
 
 
     }
 
-//    @Test
-//    public void testMemberCanBorrowBook() throws MemberExistException, IncorrectUsernameException, MemberNotFoundException {
-//        Member member = new Member();
-//        RegisterMemberRequest registerMemberRequest = new RegisterMemberRequest();
-//        registerMemberRequest.setFirstName("kemi");
-//        registerMemberRequest.setLastName("yooo");
-//        registerMemberRequest.setEmail("tobi@gmail.com");
-//        registerMemberRequest.setUsername("darkRoyals");
-//        registerMemberRequest.setPassword("passwords");
-//        RegisterMemberResponse registerMemberResponse = memberService.registerMember(registerMemberRequest);
-//        assertNotNull(registerMemberResponse);
-//        assertEquals(1, memberService.findAllMember().size());
-//
-//        LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
-//        loginMemberRequest.setUsername("darkRoyals");
-//        loginMemberRequest.setPassword("passwords");
-//        LoginMemberResponse loginMemberResponse = memberService.loginMember(loginMemberRequest);
-//        assertNotNull(loginMemberResponse);
-//        assertTrue(member.isLogStatus());
-//
-//        BorrowBookRequest borrowBookRequest = new BorrowBookRequest();
-//        borrowBookRequest.setTitle("The ice twins");
-//        borrowBookRequest.setAuthor("My daddy");
-//        borrowBookRequest.setIsbn("1234567898765");
-//        borrowBookRequest.setDateBorrowed(LocalDate.parse("12/02/2024"));
-//        borrowBookRequest.setDueDate(LocalDate.parse("26/02/2024"));
-//        BorrowBookResponse borrowBookResponse = memberService.borrowBook(borrowBookRequest);
-//        assertEquals(1,memberService.getNumberOfBorrowedBook());
-//
-//
-//
-//    }
-//
+    @Test
+    public void testMemberCanBorrowBook() throws MemberExistException, MemberNotLoggedInException, BookNotFoundException {
+        RegisterMemberRequest registerMemberRequest = registerRequests("gideon", "bare","bare@gmail.com");
+        RegisterMemberResponse registerMemberResponse  = memberService.registerMember(registerMemberRequest);
+        assertThat(registerMemberResponse.getMessage()).isNotNull();
+        assertEquals(1, memberService.findAllMember().size());
 
+        LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
+        loginMemberRequest.setEmail(registerMemberRequest.getEmail());
+        loginMemberRequest.setPassword(registerMemberRequest.getPassword());
+        memberService.login(loginMemberRequest);
+        assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
+
+       BorrowBookRequest borrowBookRequest = new BorrowBookRequest();
+       borrowBookRequest.setTitle("Ada my love");
+       borrowBookRequest.setAuthor("china achebe");
+       borrowBookRequest.setCategory(Category.HORROR);
+       borrowBookRequest.setDateBorrowed(LocalDate.now());
+       borrowBookRequest.setDueDate(LocalDate.now().plusDays(3));
+       memberService.borrowBook(borrowBookRequest);
+       assertEquals(1,memberService.findBorrowedBook());
+
+    }
+
+
+    public RegisterMemberRequest registerRequests(String firstName, String lastName, String email){
+        return RegisterMemberRequest.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .email(email)
+                .username("my name")
+                .password("your head")
+                .build();
+
+
+    }
 
 
 

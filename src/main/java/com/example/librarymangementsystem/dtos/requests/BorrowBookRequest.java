@@ -13,6 +13,7 @@ import java.util.List;
 public class BorrowBookRequest {
     private String title;
     private String author;
+    private String email;
     private LocalDate dateBorrowed;
     private Member memberId;
     private Long bookId;

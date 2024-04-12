@@ -38,7 +38,7 @@ public class BookServiceImplementation {
         AddBookRequest addBookRequest = new AddBookRequest();
         addBookRequest.setTitle("The ice twins");
         addBookRequest.setAuthor("my daddy");
-        addBookRequest.setCategory(Category.valueOf("THRILLING"));
+        addBookRequest.setCategory(Category.HORROR);
         bookServices.addBooks(addBookRequest);
 
         AddBookRequest addBookRequest1 = new AddBookRequest();

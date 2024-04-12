@@ -32,10 +32,14 @@ public interface MemberService {
 
     LoginMemberResponse login(LoginMemberRequest loginMemberRequest) throws MemberNotFoundException;
 
-    void logout(Long id) throws MemberNotLoggedInException;
 
+
+    void logout(LogoutMemberRequest logoutMemberRequest) throws MemberNotLoggedInException;
 
     Member findMemberById(Long id);
 
     void deleteAll();
+
+    int findBorrowedBook();
+
 }

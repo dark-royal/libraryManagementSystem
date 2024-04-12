@@ -1,10 +1,14 @@
 package com.example.librarymangementsystem.dtos.requests;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
 @Data
-@Component
+@Builder
+@AllArgsConstructor
+//@Component
 public class RegisterMemberRequest {
     private String username;
     private String password;

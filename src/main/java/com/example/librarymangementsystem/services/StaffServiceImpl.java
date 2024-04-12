@@ -3,7 +3,6 @@ package com.example.librarymangementsystem.services;
 import com.example.librarymangementsystem.data.models.Book;
 
 import com.example.librarymangementsystem.data.models.Staff;
-import com.example.librarymangementsystem.data.repositories.BookRepository;
 import com.example.librarymangementsystem.data.repositories.MemberRepository;
 import com.example.librarymangementsystem.data.repositories.StaffRepository;
 import com.example.librarymangementsystem.dtos.requests.*;
@@ -11,7 +10,6 @@ import com.example.librarymangementsystem.dtos.responses.BorrowBookResponse;
 import com.example.librarymangementsystem.dtos.responses.LoginStaffResponse;
 import com.example.librarymangementsystem.dtos.responses.RemoveStaffResponse;
 import com.example.librarymangementsystem.dtos.responses.ReturnBookResponse;
-import com.example.librarymangementsystem.exceptions.BookNotFoundAvailableException;
 import com.example.librarymangementsystem.exceptions.StaffExistException;
 import com.example.librarymangementsystem.exceptions.StaffNotFoundException;
 import lombok.AllArgsConstructor;
@@ -33,15 +31,18 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public Staff registerStaff(RegisterStaffRequest registerStaffRequest) {
+    public RegisterStaffResponse registerStaff(RegisterStaffRequest registerStaffRequest) {
         validate(registerStaffRequest.getEmail());
         Staff staff = new Staff();
         staff.setUsername(registerStaffRequest.getUsername());
         staff.setEmail(registerStaffRequest.getEmail());
         staff.setPassword(registerStaffRequest.getPassword());
-        staffRepository.save(staff);
+        var foundStaff = staffRepository.save(staff);
 
-        return staff;
+        RegisterStaffResponse response = new RegisterStaffResponse();
+        response.setMessage("register successfully");
+        response.setStaffId(foundStaff.getId());
+        return response;
     }
 
 
@@ -112,13 +113,9 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public Staff findStaffById(Long id) {
-        Optional<Staff> staff = staffRepository.findStaffById(id);
-        if (staff.isPresent()) {
-            return staff.get();
-        } else {
-            throw new StaffNotFoundException("staff not found");
+             return staffRepository.findById(id).orElseThrow(()->new StaffNotFoundException("staff not found"));
         }
-    }
+
 
     @Override
     public LoginStaffResponse loginStaff(LoginStaffRequest loginStaffRequest){

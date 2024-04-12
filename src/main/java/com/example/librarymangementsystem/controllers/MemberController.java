@@ -2,6 +2,7 @@ package com.example.librarymangementsystem.controllers;
 
 import com.example.librarymangementsystem.dtos.requests.FindMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginMemberRequest;
+import com.example.librarymangementsystem.dtos.requests.LogoutMemberRequest;
 import com.example.librarymangementsystem.dtos.requests.RegisterMemberRequest;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
@@ -40,10 +41,10 @@ public class MemberController {
 
         }
 
-    @PostMapping("/logout/{id}")
-    public String logout(@PathVariable("id") Long id) {
+    @PostMapping("/logout")
+    public String logout(@RequestBody LogoutMemberRequest logoutMemberRequest) {
         try {
-            memberService.logout(id);
+            memberService.logout(logoutMemberRequest);
             return "logout successful";
         } catch (Exception | MemberNotLoggedInException e) {
             return e.getMessage();

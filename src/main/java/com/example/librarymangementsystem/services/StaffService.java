@@ -15,12 +15,14 @@ import java.util.List;
 public interface StaffService {
 
 
-LoginStaffResponse loginStaff(LoginStaffRequest loginStaffRequest);
+    Staff findStaffById(Long id);
+
+    LoginStaffResponse loginStaff(LoginStaffRequest loginStaffRequest);
 
     ReturnBookResponse returnBookFromUser(Staff staff, Book book);
 
     void findStaff(FindStaffRequest findStaffRequest);
-    Staff findStaffById(Long id);
+    //Staff findStaffById(Long id);
 
     void logout(Long id);
 
@@ -32,7 +34,7 @@ LoginStaffResponse loginStaff(LoginStaffRequest loginStaffRequest);
 
 
 
-    Staff registerStaff(RegisterStaffRequest registerStaffRequest);
+    RegisterStaffResponse registerStaff(RegisterStaffRequest registerStaffRequest);
 
     RemoveStaffResponse removeStaffByEmail(DeleteStaffRequest deleteStaffRequest);
 

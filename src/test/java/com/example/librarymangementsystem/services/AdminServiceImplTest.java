@@ -4,13 +4,10 @@ import com.example.librarymangementsystem.data.models.Admin;
 import com.example.librarymangementsystem.data.models.Book;
 import com.example.librarymangementsystem.data.models.Category;
 import com.example.librarymangementsystem.data.models.Staff;
-import com.example.librarymangementsystem.data.repositories.AdminRepository;
 import com.example.librarymangementsystem.dtos.requests.AddBookRequest;
 import com.example.librarymangementsystem.dtos.requests.AddStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.DeleteStaffRequest;
 import com.example.librarymangementsystem.dtos.requests.LoginAdminRequest;
-import com.example.librarymangementsystem.dtos.responses.AddBookResponse;
-import com.example.librarymangementsystem.dtos.responses.AddStaffResponse;
 import com.example.librarymangementsystem.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,19 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static com.example.librarymangementsystem.data.models.Category.HORROR;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class AdminServiceImplTest {
 @Autowired
 private AdminServices adminServices;
-@Autowired
-private AdminRepository adminRepository;
 
 @BeforeEach
 public void setAdminServices(){
-//    adminRepository.deleteAll();
     adminServices.deleteAll();
 }
 
@@ -50,8 +43,8 @@ public void setAdminServices(){
     @Test
    public  void removeBook() throws InvalidCategoryException, BookNotFoundException {
         AddBookRequest addBookRequest = new AddBookRequest();
-        addBookRequest.setAuthor("praise");
-        addBookRequest.setTitle("nwangoziri@gmail.com");
+        addBookRequest.setAuthor("praisi");
+        addBookRequest.setTitle("nwangozirii@gmail.com");
         addBookRequest.setCategory(HORROR);
          adminServices.addBooks(addBookRequest);
         adminServices.removeBook(1L);

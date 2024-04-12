@@ -6,6 +6,7 @@ import com.example.librarymangementsystem.exceptions.BookNotFoundException;
 import com.example.librarymangementsystem.exceptions.InvalidCategoryException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookServices {
     Book addBooks(AddBookRequest addBookRequest) throws InvalidCategoryException;

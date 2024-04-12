@@ -5,9 +5,11 @@ import lombok.Data;
 @Data
 public class RegisterStaffResponse {
     private String message;
-    private Long id;
+    private Long staffId;
 
-    public Long getId() {
-        return ++id;
-    }
+
+
 }
+
+
+

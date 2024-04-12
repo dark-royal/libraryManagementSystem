@@ -35,12 +35,7 @@ public class BookServiceImpl implements BookServices{
 
     @Override
     public Book findBook(Long id) throws BookNotFoundException {
-        Optional<Book> book = bookRepository.findById(id);
-        if (book.isPresent()) {
-            return book.get();
-        } else {
-            throw new BookNotFoundException("book not found");
-        }
+        return bookRepository.findById(id).orElseThrow(()-> new BookNotFoundException("book not found"));
     }
 
     public Category verifyCategory(String cat) throws InvalidCategoryException {
@@ -48,8 +43,8 @@ public class BookServiceImpl implements BookServices{
         if (!categories.contains(Category.valueOf(cat))) {
             throw new InvalidCategoryException(STR."Invalid category: \{cat}");
         }
-        return Category.valueOf(cat);
-
+//        return Category.valueOf(cat);
+//
     }
 
 
