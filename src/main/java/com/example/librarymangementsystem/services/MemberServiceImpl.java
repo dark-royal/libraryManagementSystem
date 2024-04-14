@@ -33,21 +33,21 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public ReturnBookResponse returnBookFromUser(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException {
-//        //validateLoginStatus(returnBookRequest.);
-//        Member member = new Member();
-//        Book book = bookServices.findBook(returnBookRequest.getBookId());
-//        if (book == null) throw new BookNotFoundException("book  not found ooooooh");
-//        book.setAvailable(true);
-//        bookRepository.save(book);
-//
-//        List<Book> borrowBookList = member.getBorrowedBooks();
-//        borrowBookList.remove(book);
-//        bookRepository.save(book);
-//
-//        ReturnBookResponse response = new ReturnBookResponse();
-//        response.setMessage("returned book successfully");
-//
-        return null;
+        //validateLoginStatus(returnBookRequest.);
+        Member member = new Member();
+        Book book = bookServices.findBook(returnBookRequest.getBookId());
+        if (book == null) throw new BookNotFoundException("book  not found ooooooh");
+        book.setAvailable(true);
+        bookRepository.save(book);
+
+        List<Book> borrowBookList = member.getBorrowedBooks();
+        borrowBookList.remove(book);
+        bookRepository.save(book);
+
+        ReturnBookResponse response = new ReturnBookResponse();
+        response.setMessage("returned book successfully");
+
+        return response;
 
     }
 

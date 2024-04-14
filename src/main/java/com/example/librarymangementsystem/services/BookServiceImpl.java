@@ -43,7 +43,7 @@ public class BookServiceImpl implements BookServices{
         if (!categories.contains(Category.valueOf(cat))) {
             throw new InvalidCategoryException(STR."Invalid category: \{cat}");
         }
-//        return Category.valueOf(cat);
+        return Category.valueOf(cat);
 //
     }
 
