@@ -23,7 +23,7 @@ public class Member {
     private String password;
     private LocalDate borrowedDate;
     private LocalDate dueDate;
-    private boolean logStatus = false;
-    @OneToMany
+    private boolean logStatus;
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Book> borrowedBooks;
 }

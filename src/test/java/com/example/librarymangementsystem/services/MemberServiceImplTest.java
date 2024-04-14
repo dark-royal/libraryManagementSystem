@@ -1,6 +1,8 @@
 package com.example.librarymangementsystem.services;
 
+import com.example.librarymangementsystem.data.models.Book;
 import com.example.librarymangementsystem.data.models.Category;
+import com.example.librarymangementsystem.data.repositories.BookRepository;
 import com.example.librarymangementsystem.dtos.requests.*;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
@@ -21,6 +23,8 @@ public class MemberServiceImplTest {
 
     @Autowired
     MemberService memberService;
+    @Autowired
+    private BookRepository bookRepository;
 
     @BeforeEach
     public void setMemberService(){
@@ -157,14 +161,74 @@ public class MemberServiceImplTest {
         memberService.login(loginMemberRequest);
         assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
 
+        Book book = new Book();
+        book.setTitle("the ice twins");
+        book.setAuthor("my daddy");
+        book.setCategory(Category.THRILLING);
+        bookRepository.save(book);
+
        BorrowBookRequest borrowBookRequest = new BorrowBookRequest();
-       borrowBookRequest.setTitle("Ada my love");
-       borrowBookRequest.setAuthor("china achebe");
-       borrowBookRequest.setCategory(Category.HORROR);
+       borrowBookRequest.setEmail(registerMemberRequest.getEmail());
+       borrowBookRequest.setTitle("the ice twins");
+       borrowBookRequest.setAuthor("my daddy");
+       borrowBookRequest.setCategory(Category.THRILLING);
        borrowBookRequest.setDateBorrowed(LocalDate.now());
        borrowBookRequest.setDueDate(LocalDate.now().plusDays(3));
        memberService.borrowBook(borrowBookRequest);
-       assertEquals(1,memberService.findBorrowedBook());
+       assertEquals(1,memberService.findAllBorrowedBooks(borrowBookRequest.getEmail()).size());
+
+    }
+
+    @Test
+    public void testMemberCanReturnBook() throws MemberNotLoggedInException, BookNotFoundException, MemberExistException {
+        RegisterMemberRequest registerMemberRequest = registerRequests("gideon", "bare","bare@gmail.com");
+        RegisterMemberResponse registerMemberResponse  = memberService.registerMember(registerMemberRequest);
+        assertThat(registerMemberResponse.getMessage()).isNotNull();
+        assertEquals(1, memberService.findAllMember().size());
+
+        LoginMemberRequest loginMemberRequest = new LoginMemberRequest();
+        loginMemberRequest.setEmail(registerMemberRequest.getEmail());
+        loginMemberRequest.setPassword(registerMemberRequest.getPassword());
+        memberService.login(loginMemberRequest);
+        assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
+
+        Book book = new Book();
+        book.setTitle("the ice twins");
+        book.setAuthor("my daddy");
+        book.setCategory(Category.THRILLING);
+        bookRepository.save(book);
+
+        Book book1 = new Book();
+        book1.setTitle("Mr Chibuzor");
+        book1.setAuthor("semicolon");
+        book1.setCategory(Category.HORROR);
+        bookRepository.save(book1);
+
+
+        BorrowBookRequest borrowBookRequest = new BorrowBookRequest();
+        borrowBookRequest.setEmail(registerMemberRequest.getEmail());
+        borrowBookRequest.setTitle("the ice twins");
+        borrowBookRequest.setAuthor("my daddy");
+        borrowBookRequest.setCategory(Category.THRILLING);
+        borrowBookRequest.setDateBorrowed(LocalDate.now());
+        borrowBookRequest.setDueDate(LocalDate.now().plusDays(3));
+        memberService.borrowBook(borrowBookRequest);
+
+        BorrowBookRequest borrowBookRequest1 = new BorrowBookRequest();
+        borrowBookRequest1.setEmail(registerMemberRequest.getEmail());
+        borrowBookRequest1.setTitle("Mr Chibuzor");
+        borrowBookRequest1.setAuthor("semicolon");
+        borrowBookRequest1.setCategory(Category.HORROR);
+        borrowBookRequest1.setDateBorrowed(LocalDate.now());
+        borrowBookRequest1.setDueDate(LocalDate.now().plusDays(3));
+        memberService.borrowBook(borrowBookRequest1);
+        assertEquals(2,memberService.findAllBorrowedBooks(borrowBookRequest1.getEmail()).size());
+
+        ReturnBookRequest returnBookRequest = new ReturnBookRequest();
+        returnBookRequest.setEmail(returnBookRequest.getEmail());
+        returnBookRequest.setAuthor("semicolon");
+        returnBookRequest.setTitle("Mr Chibuzor");
+        returnBookRequest.setReturnedDate(LocalDate.now());
 
     }
 

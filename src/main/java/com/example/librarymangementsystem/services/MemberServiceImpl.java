@@ -8,12 +8,10 @@ import com.example.librarymangementsystem.dtos.requests.*;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
-import com.example.librarymangementsystem.dtos.responses.ReturnBookResponse;
 import com.example.librarymangementsystem.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,22 +30,27 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public ReturnBookResponse returnBookFromUser(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException {
+    public Book returnBookFromUser(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException {
         validateLoginStatus(returnBookRequest.getEmail());
-        Member member = new Member();
-        Book book = bookServices.findBook(returnBookRequest.getBookId());
-        if (book == null) throw new BookNotFoundException("book  not found ooooooh");
+        Member member = memberRepository.findMemberByEmail(returnBookRequest.getEmail())
+                .orElseThrow(() -> new MemberNotFoundException("Member not found"));
+
+
+        Book book = bookRepository.findBookByTitleAndAuthor(returnBookRequest.getTitle(), returnBookRequest.getAuthor())
+                .orElseThrow(() -> new BookNotFoundException("Book not found"));
+
         book.setAvailable(true);
-        bookRepository.save(book);
 
         List<Book> borrowBookList = member.getBorrowedBooks();
         borrowBookList.remove(book);
-        bookRepository.save(book);
+        member.setBorrowedBooks(borrowBookList);
 
-        ReturnBookResponse response = new ReturnBookResponse();
-        response.setMessage("returned book successfully");
+        member.setBorrowedDate(returnBookRequest.getReturnedDate());
 
-        return response;
+
+        memberRepository.save(member);
+
+        return bookRepository.save(book);
 
     }
 
@@ -92,21 +95,29 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Book borrowBook(BorrowBookRequest borrowBookRequest) throws MemberNotLoggedInException, BookNotFoundException {
-        //validateLoginStatus(borrowBookRequest.getEmail());
+        validateLoginStatus(borrowBookRequest.getEmail());
+            Member member = memberRepository.findMemberByEmail(borrowBookRequest.getEmail())
+                    .orElseThrow(() -> new MemberNotFoundException("Member not found"));
 
-        Member member = memberRepository.findMemberByEmail(borrowBookRequest.getEmail()).orElseThrow(()-> new MemberNotFoundException("Member not found"));
-        Book book  = bookServices.findBook(borrowBookRequest.getBookId());
-        book.setAvailable(false);
-        bookRepository.save(book);
 
-        List<Book> borrowBookList = member.getBorrowedBooks();
-        borrowBookList.add(book);
+            Book book = bookRepository.findBookByTitleAndAuthor(borrowBookRequest.getTitle(), borrowBookRequest.getAuthor())
+                    .orElseThrow(() -> new BookNotFoundException("Book not found"));
 
-        member.setBorrowedDate(LocalDate.now());
-        member.setDueDate(LocalDate.now().plusDays(3));
+            book.setAvailable(false);
 
-        return book;
-    }
+            List<Book> borrowBookList = member.getBorrowedBooks();
+            borrowBookList.add(book);
+            member.setBorrowedBooks(borrowBookList);
+
+            member.setBorrowedDate(borrowBookRequest.getDateBorrowed());
+            member.setDueDate(borrowBookRequest.getDueDate());
+
+            memberRepository.save(member);
+
+        return bookRepository.save(book);
+        }
+
+
 
     @Override
     public LoginMemberResponse login(LoginMemberRequest loginMemberRequest) throws MemberNotFoundException {
@@ -149,8 +160,16 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public int findBorrowedBook() {
-        return 0;
+    public Book findBorrowedBook(String email) {
+
+        return null;
+    }
+
+    @Override
+    public List<Book> findAllBorrowedBooks(String email){
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(()-> new MemberNotFoundException("Member not found"));
+        return member.getBorrowedBooks();
+
     }
 
     public void validateLoginStatus(String email) throws MemberNotLoggedInException {

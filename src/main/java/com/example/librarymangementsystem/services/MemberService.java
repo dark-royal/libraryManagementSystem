@@ -6,7 +6,6 @@ import com.example.librarymangementsystem.dtos.requests.*;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.RegisterMemberResponse;
-import com.example.librarymangementsystem.dtos.responses.ReturnBookResponse;
 import com.example.librarymangementsystem.exceptions.BookNotFoundException;
 import com.example.librarymangementsystem.exceptions.MemberExistException;
 import com.example.librarymangementsystem.exceptions.MemberNotFoundException;
@@ -20,7 +19,7 @@ public interface MemberService {
 
 
 
-    ReturnBookResponse returnBookFromUser(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException;
+    Book returnBookFromUser(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException;
 
     RegisterMemberResponse registerMember(RegisterMemberRequest registerMemberRequest) throws MemberExistException;
 
@@ -40,6 +39,8 @@ public interface MemberService {
 
     void deleteAll();
 
-    int findBorrowedBook();
 
+    Book findBorrowedBook(String email);
+
+    List<Book> findAllBorrowedBooks(String email);
 }
