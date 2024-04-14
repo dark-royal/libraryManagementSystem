@@ -1,5 +1,6 @@
 package com.example.librarymangementsystem.dtos.requests;
 
+import com.example.librarymangementsystem.data.models.Category;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -10,6 +11,9 @@ public class ReturnBookRequest {
     private String author;
     private String title;
     private LocalDate returnedDate;
+    private Category category;
     private String email;
     private Long bookId;
+
+
 }

@@ -41,7 +41,7 @@ public class MemberServiceImpl implements MemberService {
 
         book.setAvailable(true);
 
-        List<Book> borrowBookList = member.getBorrowedBooks();
+        List<Book> borrowBookList = member.getReturnedBooks();
         borrowBookList.remove(book);
         member.setBorrowedBooks(borrowBookList);
 
@@ -170,6 +170,12 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findMemberByEmail(email).orElseThrow(()-> new MemberNotFoundException("Member not found"));
         return member.getBorrowedBooks();
 
+    }
+
+    @Override
+    public List<Book> findAllReturnedBooks(String email) {
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(()-> new MemberNotFoundException("Member not found"));
+        return member.getReturnedBooks();
     }
 
     public void validateLoginStatus(String email) throws MemberNotLoggedInException {

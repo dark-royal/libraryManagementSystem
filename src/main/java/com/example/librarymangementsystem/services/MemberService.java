@@ -43,4 +43,6 @@ public interface MemberService {
     Book findBorrowedBook(String email);
 
     List<Book> findAllBorrowedBooks(String email);
+
+    List<Book> findAllReturnedBooks(String email);
 }

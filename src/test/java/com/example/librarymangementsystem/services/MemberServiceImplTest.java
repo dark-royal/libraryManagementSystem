@@ -228,7 +228,10 @@ public class MemberServiceImplTest {
         returnBookRequest.setEmail(returnBookRequest.getEmail());
         returnBookRequest.setAuthor("semicolon");
         returnBookRequest.setTitle("Mr Chibuzor");
+        returnBookRequest.setCategory(Category.HORROR);
         returnBookRequest.setReturnedDate(LocalDate.now());
+        memberService.returnBookFromUser(returnBookRequest);
+        assertEquals(1,memberService.findAllReturnedBooks(returnBookRequest.getEmail()).size());
 
     }
 
