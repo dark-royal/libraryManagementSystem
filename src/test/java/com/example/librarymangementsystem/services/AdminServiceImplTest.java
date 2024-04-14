@@ -70,6 +70,7 @@ public void setAdminServices(){
         addStaffRequest.setEmail("nwangozir@gmail.com");
         addStaffRequest.setPassword("mynamei");
         adminServices.addStaff(addStaffRequest);
+
         DeleteStaffRequest deleteStaffRequest = new DeleteStaffRequest();
         deleteStaffRequest.setEmail("nwangozir@gmail.com");
         adminServices.removeStaff(deleteStaffRequest);

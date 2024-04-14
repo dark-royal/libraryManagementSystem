@@ -33,7 +33,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public ReturnBookResponse returnBookFromUser(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException {
-        //validateLoginStatus(returnBookRequest.);
+        validateLoginStatus(returnBookRequest.getEmail());
         Member member = new Member();
         Book book = bookServices.findBook(returnBookRequest.getBookId());
         if (book == null) throw new BookNotFoundException("book  not found ooooooh");
@@ -92,9 +92,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Book borrowBook(BorrowBookRequest borrowBookRequest) throws MemberNotLoggedInException, BookNotFoundException {
-        validateLoginStatus(borrowBookRequest.getEmail());
+        //validateLoginStatus(borrowBookRequest.getEmail());
 
-        Member member= memberRepository.findMemberByEmail(borrowBookRequest.getEmail()).orElseThrow(()->new MemberNotFoundException("Member not found"));
+        Member member = memberRepository.findMemberByEmail(borrowBookRequest.getEmail()).orElseThrow(()-> new MemberNotFoundException("Member not found"));
         Book book  = bookServices.findBook(borrowBookRequest.getBookId());
         book.setAvailable(false);
         bookRepository.save(book);
