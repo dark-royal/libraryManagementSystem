@@ -1,11 +1,9 @@
 package com.example.librarymangementsystem.controllers;
 
-import com.example.librarymangementsystem.dtos.requests.FindMemberRequest;
-import com.example.librarymangementsystem.dtos.requests.LoginMemberRequest;
-import com.example.librarymangementsystem.dtos.requests.LogoutMemberRequest;
-import com.example.librarymangementsystem.dtos.requests.RegisterMemberRequest;
+import com.example.librarymangementsystem.dtos.requests.*;
 import com.example.librarymangementsystem.dtos.responses.FindMemberResponse;
 import com.example.librarymangementsystem.dtos.responses.LoginMemberResponse;
+import com.example.librarymangementsystem.exceptions.BookNotFoundException;
 import com.example.librarymangementsystem.exceptions.MemberExistException;
 import com.example.librarymangementsystem.exceptions.MemberNotFoundException;
 import com.example.librarymangementsystem.exceptions.MemberNotLoggedInException;
@@ -73,6 +71,26 @@ public class MemberController {
     } catch (MemberNotFoundException e) {
         return e.getMessage();
     }
+}
+
+@PostMapping("/borrowBook")
+    public String borrowBook(@RequestBody BorrowBookRequest borrowBookRequest){
+        try{
+            memberService.borrowBook(borrowBookRequest);
+            return "borrowed successful";
+        }catch (BookNotFoundException| MemberNotLoggedInException e){
+            return e.getMessage();
+        }
+}
+
+@PostMapping("/returnBook")
+    public String returnBook(@RequestBody ReturnBookRequest returnBookRequest){
+        try{
+            memberService.returnBookFromUser(returnBookRequest);
+            return "returned book successfully";
+        }catch (Exception | MemberNotLoggedInException | BookNotFoundException e){
+            return e.getMessage();
+        }
 }
 
 
