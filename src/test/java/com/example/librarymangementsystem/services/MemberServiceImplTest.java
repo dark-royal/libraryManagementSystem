@@ -204,9 +204,9 @@ public class MemberServiceImplTest {
 
         BorrowBookRequest borrowBookRequest1 = new BorrowBookRequest();
         borrowBookRequest1.setEmail(registerMemberRequest.getEmail());
-        borrowBookRequest1.setTitle("Mr Chibuzor");
-        borrowBookRequest1.setAuthor("semicolon");
-        borrowBookRequest1.setCategory(Category.HORROR);
+        borrowBookRequest1.setTitle("my love");
+        borrowBookRequest1.setAuthor("china achebe");
+        borrowBookRequest1.setCategory(Category.ROMANCE);
         borrowBookRequest1.setDateBorrowed(LocalDate.now());
         borrowBookRequest1.setDueDate(LocalDate.now().plusDays(3));
         memberService.borrowBook(borrowBookRequest1);
