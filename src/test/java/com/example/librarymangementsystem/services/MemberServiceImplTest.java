@@ -161,15 +161,15 @@ public class MemberServiceImplTest {
         memberService.login(loginMemberRequest);
         assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
 
-        Book book = new Book();
-        book.setTitle("the ice twins");
-        book.setAuthor("my daddy");
-        book.setCategory(Category.THRILLING);
-        bookRepository.save(book);
+//        Book book = new Book();
+//        book.setTitle("the ice twins");
+//        book.setAuthor("my daddy");
+//        book.setCategory(Category.THRILLING);
+//        bookRepository.save(book);
 
        BorrowBookRequest borrowBookRequest = new BorrowBookRequest();
        borrowBookRequest.setEmail(registerMemberRequest.getEmail());
-       borrowBookRequest.setTitle("the ice twins");
+       borrowBookRequest.setTitle("The ice twins");
        borrowBookRequest.setAuthor("my daddy");
        borrowBookRequest.setCategory(Category.THRILLING);
        borrowBookRequest.setDateBorrowed(LocalDate.now());
@@ -192,18 +192,6 @@ public class MemberServiceImplTest {
         memberService.login(loginMemberRequest);
         assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
 
-        Book book = new Book();
-        book.setTitle("the ice twins");
-        book.setAuthor("my daddy");
-        book.setCategory(Category.THRILLING);
-        bookRepository.save(book);
-
-        Book book1 = new Book();
-        book1.setTitle("Mr Chibuzor");
-        book1.setAuthor("semicolon");
-        book1.setCategory(Category.HORROR);
-        bookRepository.save(book1);
-
 
         BorrowBookRequest borrowBookRequest = new BorrowBookRequest();
         borrowBookRequest.setEmail(registerMemberRequest.getEmail());
@@ -225,13 +213,13 @@ public class MemberServiceImplTest {
         assertEquals(2,memberService.findAllBorrowedBooks(borrowBookRequest1.getEmail()).size());
 
         ReturnBookRequest returnBookRequest = new ReturnBookRequest();
-        returnBookRequest.setEmail(returnBookRequest.getEmail());
+        returnBookRequest.setEmail(registerMemberRequest.getEmail());
         returnBookRequest.setAuthor("semicolon");
         returnBookRequest.setTitle("Mr Chibuzor");
         returnBookRequest.setCategory(Category.HORROR);
         returnBookRequest.setReturnedDate(LocalDate.now());
         memberService.returnBookFromUser(returnBookRequest);
-        assertEquals(1,memberService.findAllReturnedBooks(returnBookRequest.getEmail()).size());
+        assertEquals(1,memberService.findAllBorrowedBooks(returnBookRequest.getEmail()).size());
 
     }
 

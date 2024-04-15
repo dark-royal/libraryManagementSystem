@@ -21,8 +21,6 @@ public class MemberServiceImpl implements MemberService {
     private MemberRepository memberRepository;
     @Autowired
     private BookRepository bookRepository;
-    @Autowired
-    private BookServices bookServices;
 
     @Override
     public List<Member> findAllMember() {
@@ -41,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
 
         book.setAvailable(true);
 
-        List<Book> borrowBookList = member.getReturnedBooks();
+        List<Book> borrowBookList = member.getBorrowedBooks();
         borrowBookList.remove(book);
         member.setBorrowedBooks(borrowBookList);
 
@@ -98,7 +96,6 @@ public class MemberServiceImpl implements MemberService {
         validateLoginStatus(borrowBookRequest.getEmail());
             Member member = memberRepository.findMemberByEmail(borrowBookRequest.getEmail())
                     .orElseThrow(() -> new MemberNotFoundException("Member not found"));
-
 
             Book book = bookRepository.findBookByTitleAndAuthor(borrowBookRequest.getTitle(), borrowBookRequest.getAuthor())
                     .orElseThrow(() -> new BookNotFoundException("Book not found"));
@@ -172,11 +169,11 @@ public class MemberServiceImpl implements MemberService {
 
     }
 
-    @Override
-    public List<Book> findAllReturnedBooks(String email) {
-        Member member = memberRepository.findMemberByEmail(email).orElseThrow(()-> new MemberNotFoundException("Member not found"));
-        return member.getReturnedBooks();
-    }
+//    @Override
+//    public List<Book> findAllReturnedBooks(String email) {
+//        Member member = memberRepository.findMemberByEmail(email).orElseThrow(()-> new MemberNotFoundException("Member not found"));
+//        return member.getReturnedBooks();
+//    }
 
     public void validateLoginStatus(String email) throws MemberNotLoggedInException {
         Member member = memberRepository.findMemberByEmail(email).orElseThrow(() -> new MemberNotFoundException("Member not found"));

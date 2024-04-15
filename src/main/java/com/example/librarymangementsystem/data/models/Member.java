@@ -26,8 +26,7 @@ public class Member {
     private boolean logStatus;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Book> borrowedBooks;
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private List<Book> returnedBooks;
+
 
 
 }
