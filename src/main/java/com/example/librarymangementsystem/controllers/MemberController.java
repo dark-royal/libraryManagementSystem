@@ -86,7 +86,7 @@ public class MemberController {
 @PostMapping("/returnBook")
     public String returnBook(@RequestBody ReturnBookRequest returnBookRequest){
         try{
-            memberService.returnBookFromUser(returnBookRequest);
+            memberService.returnBook(returnBookRequest);
             return "returned book successfully";
         }catch (Exception | MemberNotLoggedInException | BookNotFoundException e){
             return e.getMessage();

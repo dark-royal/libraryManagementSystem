@@ -19,7 +19,7 @@ public interface MemberService {
 
 
 
-    Book returnBookFromUser(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException;
+    Book returnBook(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException;
 
     RegisterMemberResponse registerMember(RegisterMemberRequest registerMemberRequest) throws MemberExistException;
 

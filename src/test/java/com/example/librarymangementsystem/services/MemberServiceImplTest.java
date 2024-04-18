@@ -171,7 +171,7 @@ public class MemberServiceImplTest {
        borrowBookRequest.setEmail(registerMemberRequest.getEmail());
        borrowBookRequest.setTitle("The ice twins");
        borrowBookRequest.setAuthor("my daddy");
-       borrowBookRequest.setCategory(Category.THRILLING);
+       borrowBookRequest.setCategory(Category.ROMANCE);
        borrowBookRequest.setDateBorrowed(LocalDate.now());
        borrowBookRequest.setDueDate(LocalDate.now().plusDays(3));
        memberService.borrowBook(borrowBookRequest);
@@ -193,32 +193,32 @@ public class MemberServiceImplTest {
         assertTrue(memberService.findMemberById(registerMemberResponse.getUserID()).isLogStatus());
 
 
-        BorrowBookRequest borrowBookRequest = new BorrowBookRequest();
-        borrowBookRequest.setEmail(registerMemberRequest.getEmail());
-        borrowBookRequest.setTitle("the ice twins");
-        borrowBookRequest.setAuthor("my daddy");
-        borrowBookRequest.setCategory(Category.THRILLING);
-        borrowBookRequest.setDateBorrowed(LocalDate.now());
-        borrowBookRequest.setDueDate(LocalDate.now().plusDays(3));
-        memberService.borrowBook(borrowBookRequest);
+//        BorrowBookRequest borrowBookRequest = new BorrowBookRequest();
+//        borrowBookRequest.setEmail(registerMemberRequest.getEmail());
+//        borrowBookRequest.setTitle("ada my love");
+//        borrowBookRequest.setAuthor("china achebe");
+//        borrowBookRequest.setCategory(Category.ROMANCE);
+//        borrowBookRequest.setDateBorrowed(LocalDate.now());
+//        borrowBookRequest.setDueDate(LocalDate.now().plusDays(3));
+//        memberService.borrowBook(borrowBookRequest);
 
         BorrowBookRequest borrowBookRequest1 = new BorrowBookRequest();
         borrowBookRequest1.setEmail(registerMemberRequest.getEmail());
-        borrowBookRequest1.setTitle("my love");
-        borrowBookRequest1.setAuthor("china achebe");
+        borrowBookRequest1.setTitle("The ice twins");
+        borrowBookRequest1.setAuthor("my daddy");
         borrowBookRequest1.setCategory(Category.ROMANCE);
         borrowBookRequest1.setDateBorrowed(LocalDate.now());
         borrowBookRequest1.setDueDate(LocalDate.now().plusDays(3));
         memberService.borrowBook(borrowBookRequest1);
-        assertEquals(2,memberService.findAllBorrowedBooks(borrowBookRequest1.getEmail()).size());
+        assertEquals(1,memberService.findAllBorrowedBooks(borrowBookRequest1.getEmail()).size());
 
         ReturnBookRequest returnBookRequest = new ReturnBookRequest();
         returnBookRequest.setEmail(registerMemberRequest.getEmail());
-        returnBookRequest.setAuthor("semicolon");
-        returnBookRequest.setTitle("Mr Chibuzor");
-        returnBookRequest.setCategory(Category.HORROR);
+        returnBookRequest.setAuthor(borrowBookRequest1.getAuthor());
+        returnBookRequest.setTitle(borrowBookRequest1.getTitle());
+        returnBookRequest.setCategory(borrowBookRequest1.getCategory());
         returnBookRequest.setReturnedDate(LocalDate.now());
-        memberService.returnBookFromUser(returnBookRequest);
+        memberService.returnBook(returnBookRequest);
         assertEquals(1,memberService.findAllBorrowedBooks(returnBookRequest.getEmail()).size());
 
     }

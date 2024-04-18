@@ -28,7 +28,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Book returnBookFromUser(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException {
+    public Book returnBook(ReturnBookRequest returnBookRequest) throws MemberNotLoggedInException, BookNotFoundException {
         validateLoginStatus(returnBookRequest.getEmail());
         Member member = memberRepository.findMemberByEmail(returnBookRequest.getEmail())
                 .orElseThrow(() -> new MemberNotFoundException("Member not found"));
